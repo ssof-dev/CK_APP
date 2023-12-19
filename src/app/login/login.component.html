@@ -1,0 +1,43 @@
+<div class="login-page animate">
+  <div class="login">
+
+    <h1>SIMZII<br>ERP</h1>
+    <small style="float:right; color:white"><a style="cursor:pointer;" (click)="onClickVersion()"
+        [text]="this.envService.getUiVersion()"></a></small>
+
+    <input id="userId" type="text" placeholder="UserId" name="userCode" autocomplete="off" (keyup)="keyEvent($event)"
+      [(ngModel)]="this.userModel.userId" autofocus />
+    <input id="userPw" type="password" placeholder="Password" name="userPw" autocomplete="off"
+      (keyup)="keyEvent($event)" [(ngModel)]="this.userModel.userPwd" (keypress)="this.capsLock($event)" />
+
+    <button class="btn btn-primary btn-block btn-large" id="btn1" (click)="accountLogin($event)"
+      style="display:flex; justify-content:center;margin-bottom: 5px;">
+      <i class="fas fa-spinner fa-spin" id="spin" style="visibility: hidden; padding: 3px; margin-left: 5px;"></i>
+      <i class="fas fa-check" id="check" style="display: none; padding: 3px; margin-left: 25px;"></i>
+      <label id="btnLabel" style="margin-right: 25px;">
+        {{this.btnLabel}}
+      </label>
+    </button>
+
+    <!--@ychan_20230228 디지털원패스-->
+    <!-- <div class="onepassBtn" style="display:flex; justify-content:center;margin-top: 10px;margin-bottom: 5px;">
+      <img style="cursor:pointer;" (click)="onSelectOnepass()" src='../../assets/images/login/onepass.png' />
+    </div> -->
+
+    <!--@ychan_20230228 실명인증-->
+    <!-- <button class="btn btn-success btn-block btn-large" (click)="onSelectNameSvr()"
+      style="display:flex; justify-content:center;margin-top: 10px;">
+      <label id="btnLabel" style="margin-right: 0px;">
+        {{'실명인증'}}
+      </label>
+    </button> -->
+
+
+  </div>
+
+  <footer>
+    <p>
+        <span>ERP 콜센터 ☎ 1588-4716</span>
+    </p>
+  </footer>
+</div>

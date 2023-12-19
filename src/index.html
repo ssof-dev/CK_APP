@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <title>SIMZII</title>
+  <base href="/">
+
+  <input type="hidden" name="_s_key_" id="_s_key_" value = ""/> 
+
+  <input type="hidden" name="_s_uiVer_" id="_s_uiVer_" value = "v231130.01"/> 
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <script>
+    window.onload = function(e){
+      if(window.event.keyCode === 13){
+        alert('enter');
+      }
+    }
+    //@yhj20230912 무단복사 방지 우클릭 제한 추가
+    document.oncontextmenu = function(){
+      Ext.toast('소스보기 방지를 위해 우클릭이 제한됩니다.');
+      return false;
+    }
+  </script>
+
+</head> 
+<body>
+  <app-root></app-root>
+</body>
+</html>

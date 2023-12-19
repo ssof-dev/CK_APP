@@ -1,0 +1,178 @@
+<ExtContainer padding="0" layout="fit" fitToParent="true">
+    <!--@yhj20230330 감리로 인해 함수 삭제 하여 주석-->
+    <!-- (ready)="this.comFun.keyMap_type2($event,this)" -->
+    <!-- title-->
+    <ExtTitlebar [title]="route.text" docked="top" [platformConfig]="{ 
+            phone   : { titleAlign: 'center' } 
+        ,   desktop : { titleAlign: 'left' }
+        }" [style]='{ "background": "#AD59AE" }'>
+        <ExtButton [align]="'left'" iconCls="x-fa fa-th-large" [ui]="'alt round'">
+        </ExtButton>
+        
+        <ExtButton [disabled]="this.btnViewMgr.btnDisable.searchBtn" [align]="'right'" [ui]="'alt round'" iconCls="x-fa fa-search"
+            (tap)="onTapQuery()" text="{{ '조회' | translate }}" tooltip="F1">
+        </ExtButton>
+
+    </ExtTitlebar>
+
+    <!-- contnent-->
+    <ExtPanel [shadow]="true" [layout]="{ type: 'vbox', align: 'strech' }" [scrollable]="true">
+        <!--search Form-->
+        <ExtPanel [layout]="'fit'" [height]="'90px'" docked="top" [resizable]="{edges: 'south', dynamic: true}"
+            [maxHeight]="'90px'" [minHeight]="'90px'">
+            <ExtFormpanel (ready)="onSearchFormReady($event)" [scrollable]="false">
+                <ExtContainer [layout]="{
+                        type: 'box',
+                        vertical: false
+                    }">
+                    <ExtContainer [layout]="{ type: 'box', vertical: true }" [flex]="1">
+                        <ExtFieldset [margin]="this.envService.formMargin">
+                            <ExtPanel title="line" margin="-5 0 0 0" [height]="2">
+                            </ExtPanel>
+                        </ExtFieldset>
+
+                        <ExtFieldset>
+                            <ExtTextfield margin="-10 10 0 0" label="{{ '타이틀 검색' | translate }}" [placeholder]=""
+                                [disabled]="this.isEditSearch" [value]="comFun.valEmpty(this.searchModel.title)"
+                                (keyup)="this.searchModel.title = $event.sender.rawValue"
+                                (blur)="this.searchModel.title = $event.sender.rawValue"
+                                (clearicontap)="this.searchModel.title = ''">
+                            </ExtTextfield>
+                        </ExtFieldset>
+                    </ExtContainer>
+
+                    <ExtContainer [layout]="{ type: 'box', vertical: true }" [flex]="1">
+                        <ExtFieldset [margin]="this.envService.formMargin">
+                            <ExtPanel title="line" margin="-5 0 0 0" [height]="2">
+                            </ExtPanel>
+                        </ExtFieldset>
+                    </ExtContainer>
+
+                    <ExtContainer [layout]="{ type: 'box', vertical: true }" [flex]="1">
+                        <ExtFieldset [margin]="this.envService.formMargin">
+                            <ExtPanel title="line" margin="-5 0 0 0" [height]="2">
+                            </ExtPanel>
+                        </ExtFieldset>
+                    </ExtContainer>
+
+                    <ExtContainer [layout]="{ type: 'box', vertical: true }" [flex]="1">
+                        <ExtFieldset [margin]="this.envService.formMargin">
+                            <ExtPanel title="line" margin="-5 0 0 0" [height]="2">
+                            </ExtPanel>
+                        </ExtFieldset>
+                    </ExtContainer>
+
+                    <ExtContainer [layout]="{ type: 'box', vertical: true }" [flex]="1">
+                        <ExtFieldset [margin]="this.envService.formMargin">
+                            <ExtPanel title="line" margin="-5 0 0 0" [height]="2">
+                            </ExtPanel>
+                        </ExtFieldset>
+                    </ExtContainer>
+                </ExtContainer>
+            </ExtFormpanel>
+        </ExtPanel>
+
+        <!-- main area -->
+        <ExtPanel [layout]="'fit'" [flex]="1" [border]="true">
+            <!-- main left -->
+            <ExtPanel [weight]="10" docked="left" [flex]="1" width="48%" [maxWidth]="'80%'"
+                [resizable]="{edges: 'east', dynamic: true}" [border]="true">
+                <div #extitem style="width: 100%; height: 100%;">
+                    <ag-grid-angular 
+                        #agGrid (gridReady)="this.onReadyGrid($event)" 
+                        style="width: 100%; height: 100%;"
+                        class="ag-theme-balham" 
+                        [rowData]="this.gridMain.rowData"
+                        [defaultColDef]="this.gridMain.defaultColDef" 
+                        (sortChanged)="this.comFun.onSortChanged($event)"
+                        [columnDefs]="this.gridMain.columnDefs"
+                        [frameworkComponents]="this.envService.frameworkComponents"
+                        [getRowClass]="this.envService.getRowClass" 
+                        (rowClicked)="this.rowClickEventGrid($event)">
+                    </ag-grid-angular>
+                </div>
+            </ExtPanel>
+
+            <!-- main center -->
+            <ExtPanel [flex]="1" [layout]="'vbox'" [border]="true" >
+
+                <ExtPanel [layout]="'vbox'" [border]="true" docked="top" >
+                    <ExtTitlebar [title]="''" [platformConfig]="{ phone   : { titleAlign: 'center' } ,   desktop : { titleAlign: 'left' }}" [style]='{ "background": "#0175c4" }'>
+                    </ExtTitlebar>
+                    <ExtContainer [layout]="{ type: 'box', vertical: true }" >
+                        <ExtFilefield [hidden]="this.btnViewMgr.btnDisable.fileEditBtn" margin="0 0 0 5" [label]="'첨부파일'" [disabled]="this.isEditForm"
+                            [multiple]="true" [value]="comFun.valEmpty(this.formModel.fileNm)"
+                            (change)="onChangeFile($event)" (ready)="this.filefieldCmp = $event.cmp"
+                            style="background-color: white; ">
+                        </ExtFilefield>
+
+                        <ExtPanel [layout]="'fit'" [border]="true" height="200" >
+                            <ExtContainer [layout]="'fit'" style="width: 100%; height: 100%;">
+                                <div #extitem style="width: 100%; height: 100%;">
+                                    <ag-grid-angular #agGrid (gridReady)="this.onReadyGridFile($event)"
+                                        style="width: 100%; height: 100%;" class="ag-theme-balham"
+                                        [rowData]="this.gridFile.rowData" [defaultColDef]="this.gridFile.defaultColDef"
+                                        [columnDefs]="this.gridFile.columnDefs"
+                                        [frameworkComponents]="this.envService.frameworkComponents"
+                                        (cellClicked)="cellClickEventGridFile($event)"
+                                        (sortChanged)="this.comFun.onSortChanged($event)"
+                                        [getRowClass]="this.envService.getRowClass"
+                                        [enableCellChangeFlash]="true"
+                                        [rowDragManaged]="true" [animateRows]="true" [suppressRowClickSelection]="false"
+                                        rowSelection="multiple">
+                                    </ag-grid-angular>
+                                </div>
+                            </ExtContainer>
+                        </ExtPanel>
+                    </ExtContainer>
+                </ExtPanel>
+
+                <ExtPanel [layout]="'vbox'" [border]="true" docked="top">
+                    <ExtContainer [layout]="{ type: 'box', vertical: false }" >
+                        <ExtFieldset [flex]="1">
+                            <ExtTextfield margin="0 0 0 0" label="{{ '타이틀' | translate }}" [placeholder]=""
+                                [disabled]="this.isEditForm" [value]="comFun.valEmpty(this.formModel.title)"
+                                (keyup)="this.formModel.title = $event.sender.rawValue"
+                                (blur)="this.formModel.title = $event.sender.rawValue"
+                                (clearicontap)="this.formModel.title = ''">
+                            </ExtTextfield>
+                        </ExtFieldset>
+
+                    </ExtContainer>
+
+                    
+                    <ExtContainer [layout]="{ type: 'box', vertical: false }" style="width: 100%; height: 100%;">
+                        <div #extitem style="background-color: white; width: 100%; height: 100%;" >
+                            <angular-editor [(ngModel)]="this.formModel.post" [config]="this.editorConfig" >
+                            </angular-editor>
+                        </div>
+                    </ExtContainer>
+                </ExtPanel>
+
+            </ExtPanel>
+        </ExtPanel>
+    </ExtPanel>
+    <ExtToolbar [docked]="'bottom'" [layout]="{ type: 'hbox', pack: 'right' }" [style]='{
+            "background": "#ffffff"
+        }'>
+        <ExtButton [disabled]="this.btnViewMgr.btnDisable.saveBtn" [align]="'right'" [ui]="'round'" iconCls="x-fa fa-save"
+            (tap)="onTapSave()" margin="0 0 0 5" text="{{ '저장' | translate }}" tooltip="F2">
+        </ExtButton>
+
+        <ExtButton [disabled]="this.btnViewMgr.btnDisable.modifyBtn" [align]="'right'" [ui]="'round'" iconCls="x-fa fa-eraser"
+            margin="0 0 0 5" (tap)="onTapModify()" text="{{ '수정' | translate }}" tooltip="F3">
+        </ExtButton>
+
+        <ExtButton [disabled]="this.btnViewMgr.btnDisable.deleteBtn" [align]="'right'" [ui]="'round'" iconCls="x-fa fa-trash-alt"
+            margin="0 0 0 5" (tap)="onTapDelete()" text="{{ '삭제' | translate }}" tooltip="F4">
+        </ExtButton>
+
+        <ExtButton [disabled]="this.btnViewMgr.btnDisable.newBtn" [align]="'right'" [ui]="'round'" iconCls="x-fa fa-edit"
+            margin="0 0 0 5" (tap)="onTapNew()" text="{{ '신규' | translate }}" tooltip="F5">
+        </ExtButton>
+
+        <ExtButton [disabled]="this.btnViewMgr.btnDisable.cancelBtn" [align]="'right'" [ui]="'round'" iconCls="x-fa fa-times"
+            (tap)="onTapCancel()" margin="0 0 0 5" text="{{ '취소' | translate }}" tooltip="F12">
+        </ExtButton>
+    </ExtToolbar>
+</ExtContainer>

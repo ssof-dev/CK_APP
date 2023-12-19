@@ -1,0 +1,209 @@
+<ExtContainer padding="0" layout="fit" fitToParent="true" (ready)="this.comFun.keyMap($event,this)">
+    <ExtToolbar [docked]="'top'" [shadow]="false" [layout]="{ type: 'hbox', pack: 'right' }" class="title-toolbar" style="background-color: white;">
+        <ExtButton [disabled]="this.btnDisable.searchBtn" [align]="'right'" [ui]="'round'" iconCls="x-fa fa-search"
+            (tap)="onTapQuery()"  text="{{ '조회' | translate }}" tooltip="F2">
+        </ExtButton>
+        <ExtButton [disabled]="this.btnDisable.saveBtn" [align]="'right'" [ui]="'round'" iconCls="x-fa fa-save"
+            (tap)="onTapSave()" text="{{ '저장' | translate }}" tooltip="F2">
+        </ExtButton>
+
+        <ExtButton [disabled]="this.btnDisable.newBtn" [align]="'right'" [ui]="'round'" iconCls="x-fa fa-edit"
+            (tap)="onTapNew()" text="{{ '신규' | translate }}" tooltip="F5">
+        </ExtButton>
+
+        <ExtButton [disabled]="this.btnDisable.deleteBtn" [align]="'right'" [ui]="'round'" iconCls="x-fa fa-trash-alt"
+            (tap)="onTapDelete()" text="{{ '삭제' | translate }}" tooltip="F4">
+        </ExtButton>
+
+        <ExtButton [disabled]="this.btnDisable.cancelBtn" [align]="'right'" [ui]="'round'" iconCls="x-fa fa-times"
+            (tap)="onTapCancel()" text="{{ '취소' | translate }}" tooltip="F12">
+        </ExtButton>
+    </ExtToolbar>
+
+    <ExtPanel [shadow]="true" [layout]="{type: 'vbox', align: 'stretch'}" style="background-color: white;">
+        
+        <!-- 사용자 정보, 사용자 상세정보 칸 -->
+        <ExtPanel [flex]="1" [border]="true">
+            <ExtContainer layout="fit" fitToParent="true" [flex]="1">
+                <ExtPanel [layout]="{type: 'hbox'}" [flex]="1">
+
+                    <!-- 사용자 정보 -->
+                    <ExtPanel [flex]="1" [border]="true">
+                        <ExtTitlebar
+                            docked="top"
+                            [platformConfig]="{
+                                phone   : { titleAlign: 'center'}
+                            ,   destTop : { titleAlign: 'left'}
+                            }"
+                            [height]="30"
+                        >
+                            <ExtTitle [title]="'사용자 정보'" [style]="{'font-size': '13px', 'margin-bottom': '13px'}"></ExtTitle>
+                        </ExtTitlebar>
+                        <div #extitem style="width: 100%; height: 100%;">
+                            <ag-grid-angular 
+                                #agGrid 
+                                style="width: 100%; height: 100%;" class="ag-theme-balham" 
+                                [rowData]="userGridConfig.rowData"
+                                [defaultColDef]="userGridConfig.defaultColDef" 
+                                [columnDefs]="userGridConfig.columnDefs"
+                                [enableCellChangeFlash]="true" 
+                                [rowDragManaged]="true" 
+                                [animateRows]="true"
+                                [undoRedoCellEditing]="userGridConfig.isUndo"
+                                [undoRedoCellEditingLimit]="userGridConfig.undoLimit"
+                                [suppressRowClickSelection]="userGridConfig.gridClickOption" 
+                                [groupSelectsChildren]="true" 
+                                rowSelection="multiple"
+                                (gridReady)="userGridConfig.onReadyGrid($event)"
+                                (cellValueChanged)="userGridConfig.onCellValueChanged($event)"
+                                (selectionChanged)="userGridSelectionChanged($event)"
+                            >
+                            </ag-grid-angular>
+                        </div>
+                    </ExtPanel>
+
+                    <!-- 사용자 상세정보 -->
+                    <ExtPanel [flex]="1" [border]="true" [bodyStyle]='{"background": "#ffffff"}'>
+                        <ExtTitlebar
+                            docked="top"
+                            [platformConfig]="{
+                                phone   : { titleAlign: 'center'}
+                            ,   destTop : { titleAlign: 'left'}
+                            }"
+                            [height]="30"
+                        >
+                            <ExtTitle [title]="'사용자 상세정보'" [style]="{'font-size': '13px', 'margin-bottom': '13px'}"></ExtTitle>
+                        </ExtTitlebar>
+                        <ExtPanel [layout]="{type: 'vbox', align: 'stretch'}">
+                            
+                            <!-- 첫번쨰 줄 -->
+                            <ExtFormpanel [bodyStyle]='{"background": "#ffffff"}'>
+                                <ExtFieldset layout="vbox">
+                                    <ExtFieldset layout="hbox" class="form_Group">
+                                        <ExtTextfield [style]="{'width': '50px'}" label="이름"></ExtTextfield>
+                                        <ExtInputfield [style]="{'margin-right': '50px'}"></ExtInputfield>
+
+                                        <ExtTextfield [style]="{'width': '50px'}" label="이메일"></ExtTextfield>
+                                        <ExtInputfield [style]="{'margin-right': '50px'}"></ExtInputfield>
+
+                                        <ExtTextfield [style]="{'width': '50px'}" label="부서"></ExtTextfield>
+                                        <ExtInputfield [style]="{'margin-right': '50px'}"></ExtInputfield>
+                                    </ExtFieldset>
+
+                                    <ExtFieldset layout="hbox" class="form_Group">
+                                        <ExtTextfield [style]="{'width': '50px'}" label="직급"></ExtTextfield>
+                                        <ExtInputfield [style]="{'margin-right': '50px'}"></ExtInputfield>
+
+                                        <ExtTextfield [style]="{'width': '50px'}" label="팀"></ExtTextfield>
+                                        <ExtInputfield [style]="{'margin-right': '50px'}"></ExtInputfield>
+
+                                        <ExtTextfield [style]="{'width': '50px'}" label="기타"></ExtTextfield>
+                                        <ExtInputfield [style]="{'margin-right': '50px'}"></ExtInputfield>
+                                    </ExtFieldset>
+
+                                    <ExtFieldset layout="hbox" class="form_Group">
+                                    </ExtFieldset>
+                                </ExtFieldset>
+                            </ExtFormpanel>
+
+                            <!-- 두번쨰 줄
+                            <ExtFormpanel [bodyStyle]='{"background": "#ffffff"}'>
+                                <ExtFieldset layout="hbox">
+                                    <ExtFieldset layout="hbox" class="form_Group">
+                                        <ExtTextfield [style]="{'width': '50px'}" label="직급"></ExtTextfield>
+                                        <ExtInputfield></ExtInputfield>
+                                    </ExtFieldset>
+                                    <ExtFieldset layout="hbox" class="form_Group">
+                                        <ExtTextfield [style]="{'width': '50px'}" label="팀"></ExtTextfield>
+                                        <ExtInputfield></ExtInputfield>
+                                    </ExtFieldset>
+                                    <ExtFieldset layout="hbox" class="form_Group">
+                                        <ExtTextfield [style]="{'width': '50px'}" label="기타"></ExtTextfield>
+                                        <ExtInputfield></ExtInputfield>
+                                    </ExtFieldset>
+                                </ExtFieldset>
+                            </ExtFormpanel> -->
+
+                        </ExtPanel>
+                    </ExtPanel>
+                </ExtPanel>
+            </ExtContainer>
+        </ExtPanel>
+
+        <!-- 로그인 정보, 권한 정보 칸 -->
+        <ExtPanel [flex]="1" [border]="true">
+            <ExtContainer layout="fit" fitToParent="true" [flex]="1">
+                <ExtPanel [layout]="{type: 'hbox', align: 'stretch'}">
+
+                    <!-- 로그인 정보 -->
+                    <ExtPanel [flex]="1" [border]="true">
+                        <ExtTitlebar
+                            docked="top"
+                            [platformConfig]="{
+                                phone   : { titleAlign: 'center'}
+                            ,   destTop : { titleAlign: 'left'}
+                            }"
+                            [height]="30"
+                        >
+                            <ExtTitle [title]="'로그인 정보'" [style]="{'font-size': '13px', 'margin-bottom': '13px'}"></ExtTitle>
+                        </ExtTitlebar>
+                        <div #extitem style="width: 100%; height: 100%;">
+                            <ag-grid-angular 
+                                #agGrid 
+                                style="width: 100%; height: 100%;" class="ag-theme-balham" 
+                                [rowData]="loginGridConfig.rowData"
+                                [defaultColDef]="loginGridConfig.defaultColDef" 
+                                [columnDefs]="loginGridConfig.columnDefs"
+                                [enableCellChangeFlash]="true" 
+                                [rowDragManaged]="true" 
+                                [animateRows]="true"
+                                [undoRedoCellEditing]="loginGridConfig.isUndo"
+                                [undoRedoCellEditingLimit]="loginGridConfig.undoLimit"
+                                [suppressRowClickSelection]="loginGridConfig.gridClickOption" 
+                                [groupSelectsChildren]="true" 
+                                rowSelection="multiple"
+                                (gridReady)="loginGridConfig.onReadyGrid($event)"
+                                (cellValueChanged)="loginGridConfig.onCellValueChanged($event)"
+                            >
+                            </ag-grid-angular>
+                        </div>
+                    </ExtPanel>
+
+                    <!-- 권한 정보 -->
+                    <ExtPanel [flex]="1" [border]="true">
+                        <ExtTitlebar
+                            docked="top"
+                            [platformConfig]="{
+                                phone   : { titleAlign: 'center'}
+                            ,   destTop : { titleAlign: 'left'}
+                            }"
+                            [height]="30"
+                        >
+                            <ExtTitle [title]="'권한 정보'" [style]="{'font-size': '13px', 'margin-bottom': '13px'}"></ExtTitle>
+                        </ExtTitlebar>
+                        <div #extitem style="width: 100%; height: 100%;">
+                            <ag-grid-angular 
+                                #agGrid 
+                                style="width: 100%; height: 100%;" class="ag-theme-balham" 
+                                [rowData]="authGridConfig.rowData"
+                                [defaultColDef]="authGridConfig.defaultColDef" 
+                                [columnDefs]="authGridConfig.columnDefs"
+                                [enableCellChangeFlash]="true" 
+                                [rowDragManaged]="true" 
+                                [animateRows]="true"
+                                [undoRedoCellEditing]="authGridConfig.isUndo"
+                                [undoRedoCellEditingLimit]="authGridConfig.undoLimit"
+                                [suppressRowClickSelection]="authGridConfig.gridClickOption" 
+                                [groupSelectsChildren]="true" 
+                                rowSelection="multiple"
+                                (gridReady)="authGridConfig.onReadyGrid($event)"
+                                (cellValueChanged)="authGridConfig.onCellValueChanged($event)"
+                            >
+                            </ag-grid-angular>
+                        </div>
+                    </ExtPanel>
+                </ExtPanel>
+            </ExtContainer>
+        </ExtPanel>
+    </ExtPanel>
+</ExtContainer>

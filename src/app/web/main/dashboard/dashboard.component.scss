@@ -1,0 +1,32 @@
+@import '../../../../styles/themes/app-everyn';
+
+.root-style
+{
+    width: 100%;
+    margin: 0px 0px 0px 0px;
+}
+
+div.cover-photo {
+    //background-image: url('../../../../assets/images/profile-cover.jpg');
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    height: 120px;
+    .name-desg {
+        color: white;
+        text-shadow: 1px 1px rgba(51, 48, 48, 0.6);
+        h3 {
+            font-weight: 300;
+            margin: 0;
+            small {
+                display: block;
+                color: #eee;
+                margin-top: 8px;
+                font-size: 13px;
+                font-weight: 300;
+            }
+        }
+    }
+}
+

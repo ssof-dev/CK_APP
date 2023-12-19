@@ -1,0 +1,10 @@
+// CSS image replacement
+@mixin text-hide() {
+  //@yhj-20230330 감리로 인한 버그수정
+  // font: 0/0 a;
+  font-family: 0/0 a,sans-serif;
+  color: transparent;
+  text-shadow: none;
+  background-color: transparent;
+  border: 0;
+}

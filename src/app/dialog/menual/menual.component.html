@@ -1,0 +1,36 @@
+<ExtDialog
+    [displayed]="isMenualDialog"
+    title="{{ '메뉴얼' | translate }}"
+    iconCls="x-fa fa-seedling"
+    [maximizable]="true"
+    [closable]="true"
+    [closeAction]="'hide'"
+    [bodyPadding]="20"
+    (hide)="onHide()"
+    width="80%"
+    height="80%"
+    [keyMapEnabled]="false"
+>
+
+    <ExtContainer padding="0" layout="fit" fitToParent="true">
+        <!--@yhj20230303 감리 버그 수정으로 title="" 추가-->
+        <iframe #extitem style="width: 100%; height: 100%; border: none;" name="menualIfram" title=""></iframe>        
+    </ExtContainer>
+
+    <ExtToolbar 
+        docked="bottom"
+        [layout]="{ type: 'hbox', pack: 'right' }"
+        [style]='{
+            "background": "#ffffff"
+        }'
+    >
+        <ExtButton 
+            [align]="'right'"
+            [ui]="'round'"
+            iconCls="x-fa fa-times"
+            (tap)="onCancel()"
+            text="{{ '닫기' | translate }}" 
+        >                                                
+        </ExtButton>
+    </ExtToolbar>
+</ExtDialog>

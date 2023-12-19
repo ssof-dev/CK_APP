@@ -1,0 +1,695 @@
+<ExtContainer 
+    (ready)="this.comFun.keyMap($event,this)"
+    padding="0"
+    layout="fit"
+    fitToParent="true"
+>
+    <!-- title-->
+    <ExtTitlebar
+        [title]="route.text"
+        docked="top"
+        [platformConfig]="{ 
+            phone   : { titleAlign: 'center' } 
+        ,   desktop : { titleAlign: 'left' }
+        }"
+    >
+        <ExtButton 
+            [align]="'left'" 
+            iconCls="x-fa fa-th-large"
+            [ui]="'alt round'">
+        </ExtButton>
+
+        <ExtButton 
+            [disabled]="this.btnDisable.searchBtn"
+            [align]="'right'"
+            [ui]="'alt round'"
+            iconCls="x-fa fa-search"
+            (tap)="onTapQuery()"
+            text="{{ '조회' | translate }}"
+            tooltip="F1"
+        ></ExtButton>
+
+        <ExtButton
+            [disabled]="this.btnDisable.excelBtn"
+            [align]="'right'"
+            [ui]="'alt round'"
+            [style]='{ "float": "right" }'
+            iconCls="x-fa fa-file-excel"
+            (tap)="onTapExcel()"
+            tooltip="F9"
+        ></ExtButton>
+
+        <ExtButton
+            [disabled]="this.btnDisable.reportBtn"
+            [align]="'right'"
+            [ui]="'alt round'"
+            [style]='{ "float": "right" }'
+            iconCls="x-fa fa-file-pdf"
+            (tap)="onTapReport()"
+            tooltip="F10"
+        ></ExtButton>
+
+        <ExtButton
+            [disabled]="this.btnDisable.menualBtn"
+            [align]="'right'"
+            [ui]="'alt round'"
+            [style]='{ "float": "right" }'
+            iconCls="x-fa fa-question-circle"
+            (tap)="onTapMenual()"
+            tooltip="F11"
+        ></ExtButton>
+
+    </ExtTitlebar>
+
+    <!-- contnent-->
+    <ExtPanel  
+        [shadow]="true" 
+        [layout]="{ type: 'vbox', align: 'strech' }"
+        [scrollable]="true"
+    >
+
+        <!--search Form-->
+        <!--한줄 75px 두줄 150px... (x2)-->
+        <ExtPanel  
+            [layout]="'fit'" 
+            [height]="'150px'" 
+            docked="top"
+            [resizable]="{edges: 'south', dynamic: true}"
+            [maxHeight]="'150px'"
+            [minHeight]="'80px'"
+        >
+            <ExtFormpanel
+                (ready)="onSearchFormReady($event)"
+            >
+                <!-- line 1 -->
+                <ExtContainer
+                    [layout]="{
+                    type: 'box',
+                    vertical: false
+                }"
+                >
+                    <ExtFieldset
+                        [flex]="1"
+                        [defaults]="{ labelAlign: 'placeholder' }"
+                        [margin]="this.envService.formMargin"
+                    >
+                        <ExtDatefield
+                            [value]="this.searchModel.startDt"
+                            destroyPickerOnHide="true"
+                            [dateFormat]="'Y/m/d'"
+                            label="{{ '시작일' | translate }}"
+                            (change)="onChangeStartDt($event)"
+                        ></ExtDatefield>
+                    </ExtFieldset>
+
+                    <ExtFieldset
+                        [flex]="1"
+                        [defaults]="{ labelAlign: 'placeholder' }"
+                        [margin]="this.envService.formMargin"
+                    >
+                        <ExtTextfield
+                            label="{{ 'textField' | translate }}"
+                            placeholder="{{ 'textPlaceholder' | translate }}"
+                            [value]="searchModel.textFieldVal"
+                        ></ExtTextfield>
+                     </ExtFieldset>
+
+                    <ExtFieldset
+                        [flex]="1"
+                        [defaults]="{ labelAlign: 'placeholder' }"
+                        [margin]="this.envService.formMargin"
+                    >
+                        <ExtCombobox
+                            label="{{ 'comboBox' | translate }}"
+                            [store]="comboStore"
+                            placeholder="{{ 'selectPlaceholder' | translate }}"
+                            [valueField]="'comboId'"
+                            [displayField]="'comboNm'"
+                            [queryMode]="'local'"
+                            [clearable]="true"
+                            (change)="onChangeComboBox($event)"
+                        ></ExtCombobox>
+                    </ExtFieldset>
+
+                    <ExtFieldset
+                        [flex]="1"
+                        [defaults]="{ labelAlign: 'placeholder' }"
+                        [margin]="this.envService.formMargin"
+                    >
+                        <ExtNumberfield
+                            [label]="'Number Field'"
+                            [placeholder]="'number'"
+                            [value]="searchModel.numFieldVal"
+                        ></ExtNumberfield>
+                    </ExtFieldset>
+
+                    <ExtFieldset
+                        [flex]="1"
+                        [defaults]="{ labelAlign: 'placeholder' }"
+                        [margin]="this.envService.formMargin"
+                    >
+                        <ExtEmailfield
+                            label="{{ 'eMailField' | translate }}"
+                            [placeholder]="'ygit@ssof.com'"
+                            [value]="searchModel.emailFieldVal"
+                        ></ExtEmailfield>
+                    </ExtFieldset>
+
+                    <ExtFieldset
+                        [flex]="1"
+                        [defaults]="{ labelAlign: 'placeholder' }"
+                        [margin]="this.envService.formMargin"
+                    >
+                        <ExtCheckbox
+                            boxLabel="{{ 'checkBox' | translate }}"
+                            [checked]="false"
+                            label=""
+                            style="margin-top: 24px;"
+                            [inputValue]=""
+                            (change)="onChangeCheck($event)"
+                        ></ExtCheckbox>
+                    </ExtFieldset>
+
+                    <ExtFieldset
+                        [flex]="1"
+                        [defaults]="{ labelAlign: 'placeholder' }"
+                        [margin]="this.envService.formMargin"
+                    >
+                        <ExtTogglefield
+                            label="{{ 'toggle' | translate }}"
+                            [value]="false"
+                            (change)="onChangeToggle($event)"
+                        ></ExtTogglefield>
+                    </ExtFieldset>
+                </ExtContainer>
+                
+                <!--Line 2-->
+                <ExtContainer
+                    [layout]="{
+                        type: 'box',
+                        vertical: false
+                    }"
+                >
+                    <ExtFieldset
+                        [flex]="1"
+                        [defaults]="{ labelAlign: 'placeholder' }"
+                        [margin]="this.envService.formMargin"
+                    >
+                        <ExtDatefield
+                            [value]="this.searchModel.startDt"
+                            destroyPickerOnHide="true"
+                            [dateFormat]="'Y/m/d'"
+                            label="{{ '시작일' | translate }}"
+                            (change)="onChangeStartDt($event)"
+                        ></ExtDatefield>
+                    </ExtFieldset>
+
+                    <ExtFieldset
+                        [flex]="1"
+                        [defaults]="{ labelAlign: 'placeholder' }"
+                        [margin]="this.envService.formMargin"
+                    >
+                        <ExtTextfield
+                            label="{{ 'textField' | translate }}"
+                            placeholder="{{ 'textPlaceholder' | translate }}"
+                            [value]="searchModel.textFieldVal"
+                        ></ExtTextfield>
+                    </ExtFieldset>
+
+                    <ExtFieldset
+                        [flex]="1"
+                        [defaults]="{ labelAlign: 'placeholder' }"
+                        [margin]="this.envService.formMargin"
+                    >
+                        <ExtCombobox
+                            label="{{ 'comboBox' | translate }}"
+                            [store]="comboStore"
+                            placeholder="{{ 'selectPlaceholder' | translate }}"
+                            [valueField]="'comboId'"
+                            [displayField]="'comboNm'"
+                            [queryMode]="'local'"
+                            [clearable]="true"
+                            (change)="onChangeComboBox($event)"
+                        ></ExtCombobox>
+                    </ExtFieldset>
+
+                    <ExtFieldset
+                        [flex]="1"
+                        [defaults]="{ labelAlign: 'placeholder' }"
+                        [margin]="this.envService.formMargin"
+                    >
+                        <ExtNumberfield
+                            [label]="'Number Field'"
+                            [placeholder]="'number'"
+                            [value]="searchModel.numFieldVal"
+                        ></ExtNumberfield>
+                    </ExtFieldset>
+
+                    <ExtFieldset
+                        [flex]="1"
+                        [defaults]="{ labelAlign: 'placeholder' }"
+                        [margin]="this.envService.formMargin"
+                    >
+                        <ExtEmailfield
+                            label="{{ 'eMailField' | translate }}"
+                            [placeholder]="'ygit@ssof.com'"
+                            [value]="searchModel.emailFieldVal"
+                        ></ExtEmailfield>
+                    </ExtFieldset>
+
+                    <ExtFieldset
+                        [flex]="1"
+                        [defaults]="{ labelAlign: 'placeholder' }"
+                        [margin]="this.envService.formMargin"
+                    >
+                        <ExtCheckbox
+                            boxLabel="{{ 'checkBox' | translate }}"
+                            [checked]="false"
+                            label=""
+                            style="margin-top: 24px;"
+                            [inputValue]=""
+                            (change)="onChangeCheck($event)"
+                        >
+                        </ExtCheckbox>
+                    </ExtFieldset>
+
+                    <ExtFieldset
+                        [flex]="1"
+                        [defaults]="{ labelAlign: 'placeholder' }"
+                        [margin]="this.envService.formMargin"
+                    >
+                        <ExtTogglefield
+                            label="{{ 'toggle' | translate }}"
+                            [value]="false"
+                            (change)="onChangeToggle($event)"
+                        ></ExtTogglefield>
+                    </ExtFieldset>
+                </ExtContainer>
+            </ExtFormpanel>
+        </ExtPanel>
+
+        <!-- main area -->
+        <ExtPanel  
+            [layout]="'fit'"  
+            [flex]="1"
+        >
+            <!-- main Form -->
+            <ExtPanel
+                [flex]="1"
+                [layout]="'fit'"
+                [border]="true"
+            >
+                <ExtFormpanel
+                    (ready)="onFormPanelReady($event)"
+                    [defaults]="{ 
+                        errorTarget: 'under' 
+                    }"
+                    [bodyStyle]='{
+                        "background": "#ffffff"
+                    }'
+                >
+                    <!-- line 1 -->
+                    <ExtContainer
+                        [layout]="{
+                            type: 'box',
+                            vertical: false
+                        }"
+                    >
+                        <ExtFieldset
+                            [flex]="1"
+                            [margin]="this.envService.formMargin"
+                            [defaults]="{ labelAlign: 'placeholder' }"
+                        >
+                            <!-- <ExtTextfield
+                                (ready)="onShortcutsKeyTextField($event)"
+                                label="{{ 'textField' | translate }}"
+                                placeholder="{{ 'textPlaceholder' | translate }}"
+                                [disabled]="this.isFormEdit"
+                                [value]="this.formModel.textFieldVal"
+                                [autoComplete]="false"
+                                [validators]="{
+                                    type: 'method',
+                                    fn: this.comVal.validationEnNum
+                                }"
+                                [triggers]="{
+                                    search:{
+                                        iconCls:'x-fa fa-search',
+                                        handler: this.codeDialog
+                                    }
+                                }"
+                            ></ExtTextfield> -->
+
+                        </ExtFieldset>
+
+                        <ExtFieldset
+                            [flex]="1"
+                            [margin]="this.envService.formMargin"
+                            [defaults]="{ labelAlign: 'placeholder' }"
+                        >
+                            <ExtDatefield
+                                [value]=""
+                                destroyPickerOnHide="true"
+                                [dateFormat]="'Y/m/d'"
+                                label="{{ '시작일' | translate }}"
+                                [disabled]="this.isFormEdit"
+                                (change)="onChangeStartDt($event)"
+                            ></ExtDatefield>
+                        </ExtFieldset>
+
+                        <ExtFieldset
+                            [flex]="1"
+                            [margin]="this.envService.formMargin"
+                            [defaults]="{ labelAlign: 'placeholder' }"
+                        >
+                            <ExtCombobox
+                                label="{{ 'comboBox' | translate }}"
+                                [store]="comboStore"
+                                placeholder="{{ 'selectPlaceholder' | translate }}"
+                                [valueField]="'comboId'"
+                                [displayField]="'comboNm'"
+                                [queryMode]="'local'"
+                                [clearable]="true"
+                                [disabled]="this.isFormEdit"
+                                [required]="true"
+                                [requiredMessage]="'This field is required.'"
+                                (change)="onChangeComboBox($event)"
+                            ></ExtCombobox>
+                        </ExtFieldset>
+
+                        <ExtFieldset
+                            [flex]="1"
+                            [margin]="this.envService.formMargin"
+                            [defaults]="{ labelAlign: 'placeholder' }"
+                        >
+                            <ExtCheckbox
+                                boxLabel="{{ 'checkBox' | translate }}"
+                                [checked]="false"
+                                label=""
+                                name="checkVal"
+                                [inputValue]=""
+                                style="margin-top: 25px;"
+                                [disabled]="this.isFormEdit"
+                                (change)="onChangeCheck($event)"
+                            ></ExtCheckbox>
+                        </ExtFieldset>
+
+                        <ExtFieldset
+                            [flex]="1"
+                            [margin]="this.envService.formMargin"
+                            [defaults]="{ labelAlign: 'placeholder' }"
+                        >
+                            <ExtTogglefield
+                                label="{{ 'toggle' | translate }}"
+                                [value]="false"
+                                [disabled]="this.isFormEdit"
+                                (change)="onChangeToggle($event)"
+                            ></ExtTogglefield>
+                        </ExtFieldset>
+                    </ExtContainer>
+
+                    <!-- line 2 -->
+                    <ExtContainer
+                        [layout]="{
+                            type: 'box',
+                            vertical: false
+                        }"
+                    >
+                        <ExtFieldset
+                            [flex]="1"
+                            [margin]="this.envService.formMargin"
+                            [defaults]="{ labelAlign: 'placeholder' }"
+                        >
+                            <ExtTextfield
+                                label="{{ 'textField' | translate }}"
+                                placeholder="{{ 'textPlaceholder' | translate }}"
+                                [disabled]="this.isFormEdit"
+                                [value]="this.formModel.textFieldVal"
+                                [validators]="{
+                                    type: 'method',
+                                    fn: this.comVal.validationEnNum
+                                }"
+                            ></ExtTextfield>
+                        </ExtFieldset>
+
+                        <ExtFieldset
+                            [flex]="1"                            
+                            [margin]="this.envService.formMargin"
+                            [defaults]="{ labelAlign: 'placeholder' }"
+                        >
+                            <ExtTextfield
+                                label="{{ 'textField' | translate }}"
+                                [placeholder]="'Text Field'"
+                                [disabled]="this.isFormEdit"
+                                [value]="this.formModel.textFieldVal"
+                                [validators]="{
+                                    type: 'method',
+                                    fn: this.comVal.validationEnNum
+                                }"
+                            ></ExtTextfield>
+                        </ExtFieldset>
+
+                        <ExtFieldset
+                            [flex]="1"
+                            [margin]="this.envService.formMargin"
+                            [defaults]="{ labelAlign: 'placeholder' }"
+                        >
+                            <ExtUrlfield
+                                label="{{ 'url' | translate }}"
+                                [disabled]="this.isFormEdit"
+                                [placeholder]="'https://mail.ssof.co.kr'"
+                                [value]="this.formModel.urlFieldVal"
+                            ></ExtUrlfield>
+                        </ExtFieldset>
+
+                        <ExtFieldset
+                            [flex]="1"                            
+                            [margin]="this.envService.formMargin"
+                            [defaults]="{ labelAlign: 'placeholder' }"
+                        >
+                            <ExtEmailfield
+                                label="{{ 'email' | translate }}"
+                                [placeholder]="'ygit@ssof.com'"
+                                [disabled]="this.isFormEdit"
+                                [value]="formModel.emailFieldVal"
+                            ></ExtEmailfield>
+                        </ExtFieldset>
+
+                        <ExtFieldset
+                            [flex]="1"                            
+                            [margin]="this.envService.formMargin"
+                            [defaults]="{ labelAlign: 'placeholder' }"
+                        >
+                            <ExtNumberfield
+                                label="{{ 'number' | translate }}"
+                                placeholder="{{ 'numberPlaceholder' | translate }}"
+                                [disabled]="this.isFormEdit"
+                                [value]="formModel.numFieldVal"
+                                [validators]="{
+                                    type: 'range',
+                                    min: 1,
+                                    max: 5,
+                                    minOnlyMessage: '{0} 보다 커야합니다.',
+                                    maxOnlyMessage: '{0} 보다 작아야합니다',
+                                    bothMessage: '{0} ~ {1} 사이의 값을 입력하세요'
+                                }"
+                            ></ExtNumberfield>
+                        </ExtFieldset>
+                    </ExtContainer>
+
+                    <!--Line 3-->
+                    <ExtFieldset
+                        [margin]="this.envService.formMargin"
+                    >
+                        <ExtContainer
+                            [autoSize]="true"
+                            [defaults]="{
+                                flex: 1,
+                                bodyPadding: 5
+                            }"
+                            [flex]="1"
+                        >
+                            <ExtPanel
+                                [header]="{
+                                    height: 20,
+                                    minHeight: 20,
+                                    maxHeight: 20,
+                                    style:{
+                                        'background-color': '#5184af'
+                                    }
+                                }"
+                                [shadow]="false"
+                                [height]="300"
+                                [collapsible]="{direction: 'top',dynamic: true}"
+                                [scrollable]="true"
+                                [border]="true"
+                            >
+                                <ExtFilefield
+                                    label="{{'첨부파일'|translate}}"
+                                    (change)="onChangeFile($event)"
+                                    [multiple]="true"
+                                    margin='0 0 5 0'
+                                ></ExtFilefield>
+
+                                <ExtGrid
+                                    [height]="200"
+                                    columnLines="true"
+                                    [store]="this.fileGridStore" 
+                                    [rowNumbers]="{
+                                        width: '6%', 
+                                        text:'No',
+                                        align: 'center'
+                                    }"  
+                                >
+                                    <ExtColumn 
+                                        text="{{ '파일명' | translate }}"
+                                        dataIndex = "fileNm"
+                                        [align] = "'left'"
+                                        filter = "string"
+                                        width="84%"
+                                    >
+                                    </ExtColumn>
+                                    <ExtColumn
+                                        text="{{ '받기' | translate }}"
+                                        [align] = "'center'"
+                                        width="5%"
+                                        [cell]="{
+                                            tools:{
+                                                trash:{
+                                                    iconCls: 'x-fa fa-download',
+                                                    handler: this.onDownloadFile
+                                                }
+                                            }
+                                        }"
+                                    >
+                                    </ExtColumn>
+                                    <ExtColumn
+                                        text="{{ '삭제' | translate }}"
+                                        [align] = "'center'"
+                                        width="5%"
+                                        [cell]="{
+                                            tools:{
+                                                trash:{
+                                                    iconCls: 'x-fa fa-trash-alt',
+                                                    handler: this.onTrashFile
+                                                }
+                                            }
+                                        }"
+                                    >
+                                    </ExtColumn>
+                                </ExtGrid>
+                            </ExtPanel>
+                        </ExtContainer>
+                    </ExtFieldset>
+
+                    <!--Line 4-->
+                    <ExtFieldset
+                        [margin]="this.envService.formMargin"
+                        [defaults]="{ labelAlign: 'placeholder' }"
+                    >
+                        <div #extitem style="background-color: white;">
+                            <angular-editor 
+                                [(ngModel)]="formModel.editFieldVal" 
+                                [config]="editorConfig"
+                            ></angular-editor>
+                        </div>
+                    </ExtFieldset>
+                    <ExtToolbar
+                        [docked]="'bottom'"
+                        [layout]="{ type: 'hbox', pack: 'right' }"
+                        [style]='{
+                        "background": "#ffffff"
+                        }'
+                    >
+                        <ExtButton 
+                            [disabled]="this.btnDisable.saveBtn"
+                            [align]="'right'"
+                            [ui]="'round'"
+                            iconCls="x-fa fa-save"
+                            (tap)="onTapSave()"
+                            margin= "0 0 0 5"
+                            text="{{ '저장' | translate }}" 
+                            tooltip="F2"
+                        ></ExtButton>
+
+                        <ExtButton 
+                            [disabled]="this.btnDisable.modifyBtn"
+                            [align]="'right'"
+                            [ui]="'round'"
+                            iconCls="x-fa fa-eraser"
+                            margin="0 0 0 5"
+                            (tap)="onTapModify()"
+                            text="{{ '수정' | translate }}" 
+                            tooltip="F3"
+                        ></ExtButton>
+                        
+                        <ExtButton 
+                            [disabled]="this.btnDisable.deleteBtn"
+                            [align]="'right'"
+                            [ui]="'round'"
+                            iconCls="x-fa fa-trash-alt"
+                            margin= "0 0 0 5"
+                            (tap)="onTapDelete()"
+                            text="{{ '삭제' | translate }}" 
+                            tooltip="F4"
+                        ></ExtButton>
+
+                        <ExtButton 
+                            [disabled]="this.btnDisable.newBtn"
+                            [align]="'right'"
+                            [ui]="'round'"
+                            iconCls="x-fa fa-edit"
+                            margin= "0 0 0 5"
+                            (tap)="onTapNew()"
+                            text="{{ '신규' | translate }}" 
+                            tooltip="F5"
+                        ></ExtButton>
+
+                        <ExtButton 
+                            [disabled]="this.btnDisable.reqApprBtn"
+                            [align]="'right'"
+                            [ui]="'round'"
+                            iconCls="x-fa fa-clipboard-list"
+                            (tap)="onTapRequestAppr()"
+                            margin= "0 0 0 5"
+                            text="{{ '승인요청' | translate }}" 
+                            tooltip="F6"
+                        ></ExtButton>
+
+                        <ExtButton 
+                            [disabled]="this.btnDisable.apprBtn"
+                            [align]="'right'"
+                            [ui]="'round'"
+                            iconCls="x-fa fa-check-double"
+                            (tap)="onTapAppr()"
+                            margin= "0 0 0 5"
+                            text="{{ '승인' | translate }}" 
+                            tooltip="F7"
+                        ></ExtButton>
+
+                        <ExtButton 
+                            [disabled]="this.btnDisable.rejectBtn"
+                            [align]="'right'"
+                            [ui]="'round'"
+                            iconCls="x-fa fa-undo"
+                            (tap)="onTapReject()"
+                            margin= "0 0 0 5"
+                            text="{{ '반려' | translate }}" 
+                            tooltip="F8"
+                        ></ExtButton>
+
+                        <ExtButton 
+                            [disabled]="this.btnDisable.cancelBtn"
+                            [align]="'right'"
+                            [ui]="'round'"
+                            iconCls="x-fa fa-times"
+                            (tap)="onTapCancel()"
+                            margin= "0 0 0 5"
+                            text="{{ '취소' | translate }}" 
+                            tooltip="F12"
+                        ></ExtButton>
+                    </ExtToolbar>
+                </ExtFormpanel>
+            </ExtPanel>
+        </ExtPanel>
+    </ExtPanel>
+</ExtContainer>

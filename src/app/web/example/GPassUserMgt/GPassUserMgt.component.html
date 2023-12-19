@@ -1,0 +1,279 @@
+<ExtContainer padding="0" layout="fit" fitToParent="true">
+    <!--@yhj20230330 감리로 인해 함수 삭제 하여 주석-->
+    <!-- (ready)="this.comFun.keyMap_type2($event,this)" -->
+    <!-- title-->
+    <ExtTitlebar [title]="route.text" docked="top" [platformConfig]="{ 
+            phone   : { titleAlign: 'center' } 
+        ,   desktop : { titleAlign: 'left' }
+        }" [style]='{ "background": "#bf545d" }'>
+        <ExtButton [align]="'left'" iconCls="x-fa fa-th-large" [ui]="'alt round'" >
+        </ExtButton>
+        <ExtButton [align]="'right'" [ui]="'alt round'" iconCls="x-fa fa-search" (tap)="onTapQuery($event)"
+            text="{{ '조회' | translate }}" tooltip="F1">
+        </ExtButton>
+    </ExtTitlebar>
+
+    <!-- contents-->
+    <ExtPanel [shadow]="true" [layout]="{ type: 'vbox', align: 'strech' }" [scrollable]="true">
+        <!--search Form-->
+        <ExtPanel [layout]="'fit'" [height]="'90px'" docked="top" [resizable]="{edges: 'south', dynamic: true}"
+            [maxHeight]="'90px'" [minHeight]="'90px'">
+            <ExtFormpanel (ready)="onSearchFormReady($event)">
+                <ExtContainer [layout]="{ type: 'box', vertical: false  }">
+                    <ExtContainer [layout]="{ type: 'box', vertical: true }" [flex]="1">
+                        <ExtFieldset [margin]="this.envService.formMargin">
+                            <ExtPanel title="line" margin="-5 0 0 0" [height]="2"> </ExtPanel>
+                        </ExtFieldset>
+                        <ExtFieldset>
+                            <ExtTextfield 
+                                margin="-10 10 0 0"
+                                label="{{ '계정명' | translate }}" 
+                                [placeholder]=""
+                                [disabled]="false" 
+                                [value]="comFun.valEmpty(this.searchModel.searchUserId)"
+                                (keyup)="this.searchModel.searchUserId = $event.sender.rawValue"
+                                (blur)="this.searchModel.searchUserId = $event.sender.rawValue"
+                                (clearicontap)="this.searchModel.searchUserId = ''">
+                            </ExtTextfield>
+                        </ExtFieldset>
+                    </ExtContainer>
+
+                    <ExtContainer [layout]="{ type: 'box', vertical: true }" [flex]="1">
+                        <ExtFieldset [margin]="this.envService.formMargin">
+                            <ExtPanel title="line" margin="-5 0 0 0" [height]="2"> </ExtPanel>
+                        </ExtFieldset>
+                    </ExtContainer>
+
+                    <ExtContainer [layout]="{ type: 'box', vertical: true }" [flex]="1">
+                        <ExtFieldset [margin]="this.envService.formMargin">
+                            <ExtPanel title="line" margin="-5 0 0 0" [height]="2"> </ExtPanel>
+                        </ExtFieldset>
+                    </ExtContainer>
+
+                    <ExtContainer [layout]="{ type: 'box', vertical: true }" [flex]="1">
+                        <ExtFieldset [margin]="this.envService.formMargin">
+                            <ExtPanel title="line" margin="-5 0 0 0" [height]="2"> </ExtPanel>
+                        </ExtFieldset>
+                    </ExtContainer>
+
+                </ExtContainer>
+            </ExtFormpanel>
+        </ExtPanel>
+
+        <ExtPanel [layout]="'fit'" [flex]="1">
+            <ExtPanel [weight]="10" docked="left" [flex]="1" width="70%" [maxWidth]="'70%'"
+                [resizable]="{edges: 'east', dynamic: true}" [border]="true">
+                <ExtContainer layout="fit" fitToParent="true">
+                    <div #extitem style="width: 100%; height: 100%;">
+                        <!--
+                            rowSelection="single / multiple"    : 행선택옵션 multiple 지정시 ctrl+click= 여러행선택 shift+click = 범위선택
+                            [rowMultiSelectWithClick]="true"    : 행선택옵션이 multiple 일때 해당 속성이 true이면 원클릭으로 다중선택 가능
+                            [suppressRowClickSelection]="true"  : 체크박스가 있을때 해당값이 true 이면 row 선택시 체크가 풀리지않음
+                            [enableCellChangeFlash]="true"      : 새로고침된 셀이 깜빡임
+                            [valueCache]="true"                 : 대량의 그리드 데이터를 수정할때 성능향상을 위해 케시 사용 기본값은 false
+                            [undoRedoCellEditingLimit]="10"     : ctrl+z로 되돌릴 문자수 설정값이 넘어가면 바로 초기값으로 변함
+                            (rowSelected)="event method"        : 행 선택시 동작
+                            (rowClicked)="event method"         : 행 클릭시 동작
+                            (rowDoubleClicked)="event method"   : 행 더블클릭시 동작
+                            (cellClicked)="event method"        : 셀 클릭시 동작
+                            (cellDoubleClicked)="event method"  : 셀 더블클릭시 동작
+                        -->
+                        <ag-grid-angular #agGrid (gridReady)="this.onReadyGrid($event)"
+                            style="width: 100%; height: 100%;" class="ag-theme-balham" [rowData]="this.gridMain.rowData"
+                            [defaultColDef]="this.gridMain.defaultColDef" [columnDefs]="this.gridMain.columnDefs"
+                            [frameworkComponents]="this.envService.frameworkComponents"
+                            (sortChanged)="this.comFun.onSortChanged($event)"
+                            [getRowClass]="this.envService.getRowClass" (rowClicked)="this.agGridRowEvent($event)"
+                            [enableCellChangeFlash]="true" [rowDragManaged]="true" [animateRows]="true"
+                            [suppressRowClickSelection]="false" rowSelection="multiple">
+                        </ag-grid-angular>
+                    </div>
+                </ExtContainer>
+            </ExtPanel>
+
+            <!-- main center -->
+            <ExtPanel [flex]="1" [layout]="'fit'" [border]="true" [autoSize]="true">
+                <ExtFormpanel (ready)="onFormPanelReady($event)" [defaults]="{errorTarget: 'under'}"
+                    [bodyStyle]='{"background": "#ffffff"}' [scrollable]="true">
+                    <ExtContainer [layout]="{ type: 'box', vertical: false }">
+
+                        <ExtTitlebar [title]="'계정 정보'" docked="top" [platformConfig]="{ 
+                                phone   : { titleAlign: 'center' } 
+                            ,   desktop : { titleAlign: 'left' }
+                            }" [style]='{ "background": "#0175c4" }'>
+
+                            <ExtButton text="팝업" [align]="'right'" [ui]="'alt round'" iconCls="x-fas fa-unlock-alt"
+                                (tap)="openPopup()" [disabled]="this.isEditForm">
+                            </ExtButton>
+                        </ExtTitlebar>
+
+                        <ExtContainer [flex]="1">
+                            <ExtContainer [layout]="{ type: 'box', vertical: true }">
+                                <ExtFieldset>
+                                    <ExtTextfield 
+                                        label="{{ '사용자 ID' | translate }}" 
+                                        [placeholder]=""
+                                        [disabled]="this.isEditUserId" 
+                                        [value]="comFun.valEmpty(this.formModel.userId)"
+                                        (keyup)="this.formModel.userId = $event.sender.rawValue"
+                                        (blur)="this.formModel.userId = $event.sender.rawValue"
+                                        (clearicontap)="this.formModel.userId = ''"
+                                        [required]="this.isRequired"
+                                        [requiredMessage]="'필수값 입니다.'">
+                                    </ExtTextfield>
+                                </ExtFieldset>
+                            </ExtContainer>
+
+                            <ExtContainer [layout]="{ type: 'box', vertical: true }">
+                                <ExtFieldset>
+                                    <ExtTextfield 
+                                        label="{{ '사용자 PW' | translate }}" 
+                                        [placeholder]=""
+                                        [disabled]="this.isEditForm" 
+                                        [value]="comFun.valEmpty(this.formModel.userPass)"
+                                        (keyup)="this.formModel.userPass = $event.sender.rawValue"
+                                        (blur)="this.formModel.userPass = $event.sender.rawValue"
+                                        (clearicontap)="this.formModel.userPass = ''"
+                                        [required]="this.isRequired"
+                                        [requiredMessage]="'필수값 입니다.'">
+                                    </ExtTextfield>
+                                </ExtFieldset>
+                            </ExtContainer>
+
+                            <ExtContainer [layout]="{ type: 'box', vertical: true }">
+                                <ExtFieldset>
+                                    <ExtTextfield 
+                                        label="{{ '사용자 등급' | translate }}" 
+                                        [placeholder]=""
+                                        [disabled]="this.isEditForm" 
+                                        [value]="comFun.valEmpty(this.formModel.userLevel)"
+                                        (keyup)="this.comFun.blurField($event.sender.rawValue, this.gridMain.gridApi, this.formModel, this.gridMain.rowId, 'userLevel')"
+                                        (blur)="this.formModel.userLevel = $event.sender.rawValue"
+                                        (clearicontap)="this.formModel.userLevel = ''"
+                                        [maxLength]="2">
+                                    </ExtTextfield>
+                                </ExtFieldset>
+                            </ExtContainer>
+
+                            <ExtContainer [layout]="{ type: 'box', vertical: true }">
+                                <ExtFieldset>
+                                    <ExtTextfield 
+                                        label="{{ '회원사 코드' | translate }}" 
+                                        [placeholder]=""
+                                        [disabled]="this.isEditForm" 
+                                        [value]="comFun.valEmpty(this.formModel.memberCd)"
+                                        (keyup)="this.comFun.blurField($event.sender.rawValue, this.gridMain.gridApi, this.formModel, this.gridMain.rowId, 'memberCd')"
+                                        (blur)="this.formModel.memberCd = $event.sender.rawValue"
+                                        (clearicontap)="this.formModel.memberCd = ''"
+                                        [maxLength]="5">
+                                    </ExtTextfield>
+                                </ExtFieldset>
+                            </ExtContainer>
+
+                            <ExtContainer [layout]="{ type: 'box', vertical: true }">
+                                <ExtFieldset>
+                                    <ExtTextfield 
+                                        label="{{ '등록ID' | translate }}" 
+                                        [placeholder]=""
+                                        [disabled]="true" 
+                                        [value]="comFun.valEmpty(this.formModel.rgstId)"
+                                        (keyup)="this.formModel.rgstId = $event.sender.rawValue"
+                                        (blur)="this.formModel.rgstId = $event.sender.rawValue"
+                                        (clearicontap)="this.formModel.rgstId = ''">
+                                    </ExtTextfield>
+                                </ExtFieldset>
+                            </ExtContainer>
+
+                            <ExtContainer [layout]="{ type: 'box', vertical: true }">
+                                <ExtFieldset>
+                                    <ExtTextfield 
+                                        label="{{ '등록일시' | translate }}" 
+                                        [placeholder]=""
+                                        [disabled]="true" 
+                                        [value]="comFun.valEmpty(this.formModel.rgstDate)"
+                                        (keyup)="this.formModel.rgstDate = $event.sender.rawValue"
+                                        (blur)="this.formModel.rgstDate = $event.sender.rawValue"
+                                        (clearicontap)="this.formModel.rgstDate = ''">
+                                    </ExtTextfield>
+                                </ExtFieldset>
+                            </ExtContainer>
+
+                            <ExtContainer [layout]="{ type: 'box', vertical: true }">
+                                <ExtFieldset>
+                                    <ExtTextfield 
+                                        label="{{ '수정ID' | translate }}" 
+                                        [placeholder]=""
+                                        [disabled]="true" 
+                                        [value]="comFun.valEmpty(this.formModel.edtrId)"
+                                        (keyup)="this.formModel.edtrId = $event.sender.rawValue"
+                                        (blur)="this.formModel.edtrId = $event.sender.rawValue"
+                                        (clearicontap)="this.formModel.edtrId = ''">
+                                    </ExtTextfield>
+                                </ExtFieldset>
+                            </ExtContainer>
+
+                            <ExtContainer [layout]="{ type: 'box', vertical: true }">
+                                <ExtFieldset>
+                                    <ExtTextfield 
+                                        label="{{ '수정일시' | translate }}" 
+                                        [placeholder]=""
+                                        [disabled]="true" 
+                                        [value]="comFun.valEmpty(this.formModel.edtrDate)"
+                                        (keyup)="this.formModel.edtrDate = $event.sender.rawValue"
+                                        (blur)="this.formModel.edtrDate = $event.sender.rawValue"
+                                        (clearicontap)="this.formModel.edtrDate = ''">
+                                    </ExtTextfield>
+                                </ExtFieldset>
+                            </ExtContainer>
+
+                            <ExtContainer [layout]="{ type: 'box', vertical: true }" [scrollable]="true">
+                                <ExtFieldset>
+                                    <ExtCombobox 
+                                        label="{{ '삭제여부' | translate }}" 
+                                        placeholder=""
+                                        [disabled]="this.isEditForm"
+                                        [value]="comFun.valEmpty(this.formModel.deleteYn)"
+                                        (select)="this.onSelectCbDeleteYn($event)"
+                                        (clearicontap)="this.formModel.deleteYn = ''" 
+                                        [editable]="true"
+                                        [store]="this.cbsUseYn" 
+                                        [valueField]="'comboId'" 
+                                        [displayField]="'comboNm'"
+                                        [queryMode]="'local'"
+                                        [clearable]="true" 
+                                        [textAlign]="'left'"
+                                        [forceSelection]="true" 
+                                        [required]="this.isRequired"
+                                        [requiredMessage]="'필수값 입니다.'">
+                                    </ExtCombobox>
+                                </ExtFieldset>
+                            </ExtContainer>
+
+                        </ExtContainer>
+                    </ExtContainer>
+                </ExtFormpanel>
+            </ExtPanel>
+        </ExtPanel>
+    </ExtPanel>
+    <ExtToolbar [docked]="'bottom'" [layout]="{ type: 'hbox', pack: 'right' }" [style]='{"background": "#ffffff"}'>
+        <ExtButton [disabled]="this.btnViewMgr.btnDisable.saveBtn" [align]="'right'" [ui]="'round'" iconCls="x-fa fa-save"
+            (tap)="onTapSave($event)" margin="0 0 0 5" text="{{ '저장' | translate }}" tooltip="F2">
+        </ExtButton>
+
+        <ExtButton [disabled]="this.btnViewMgr.btnDisable.modifyBtn" [align]="'right'" [ui]="'round'" iconCls="x-fa fa-eraser"
+            (tap)="onTapModify($event)" margin="0 0 0 5" text="{{ '수정' | translate }}" tooltip="F3">
+        </ExtButton>
+
+        <ExtButton [disabled]="this.btnViewMgr.btnDisable.deleteBtn" [align]="'right'" [ui]="'round'" iconCls="x-fa fa-trash-alt"
+            (tap)="onTapDelete($event)" margin="0 0 0 5" text="{{ '삭제' | translate }}" tooltip="F4">
+        </ExtButton>
+
+        <ExtButton [disabled]="this.btnViewMgr.btnDisable.newBtn" [align]="'right'" [ui]="'round'" iconCls="x-fa fa-edit"
+            (tap)="onTapNew($event)" margin="0 0 0 5" text="{{ '신규' | translate }}" tooltip="F5">
+        </ExtButton>
+
+        <ExtButton [disabled]="this.btnViewMgr.btnDisable.cancelBtn" [align]="'right'" [ui]="'round'" iconCls="x-fa fa-times"
+            (tap)="onTapCancel($event)" margin="0 0 0 5" text="{{ '취소' | translate }}" tooltip="F12">
+        </ExtButton>
+    </ExtToolbar>
+</ExtContainer>

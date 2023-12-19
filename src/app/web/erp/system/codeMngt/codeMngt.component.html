@@ -1,0 +1,208 @@
+<ExtContainer padding="0" layout="fit" fitToParent="true" (ready)="comFun.keyMap($event,this)">
+
+    <!--공통버튼-->
+    <AuthButton
+        #authButton
+        [route]= "route"
+        ([authButtonDisabled])="authButtonDisabled"
+        (onTapQuery)="onTapQuery()"
+        (onTapNew)="onTapNew()"
+        (onTapEdit)="onTapEdit()"
+        (onTapSave)="onTapSave()"
+        (onTapDelete)="onTapDelete()"
+        (onTapRequest)="onTapRequest()"
+        (onTapApproval)="onTapApproval()"
+        (onTapDenied)="onTapDenied()"
+        (onExportExcel)="onExportExcel()"
+        (onExportPdf)="onExportPdf()"
+        (onTapCancel)="onTapCancel()"
+    ></AuthButton>
+
+    <!-- contnent-->
+    <ExtPanel 
+        [shadow]="true" 
+        [layout]="{ type: 'vbox', align: 'strech' }" 
+    >
+        <!--search Form-->
+        <ExtPanel [layout]="'fit'" [height]="'95px'" docked="top" >
+            <ExtFormpanel (ready)="searchFormCmp = $event.cmp" [scrollable]="false">
+                <ExtContainer [layout]="{ type: 'box', vertical: false  }">
+                    <!-- Vertical 1 -->
+                    <ExtContainer [layout]="{ type: 'box', vertical: true }" [flex]="1">
+                        <ExtFieldset [margin]="envService.formMargin">
+                            <ExtPanel title="line" margin="-5 0 0 0" [height]="2"></ExtPanel>
+                        </ExtFieldset>
+
+                        <!-- ITEM -->
+                        <ExtFieldset>
+                            <ExtTextfield label="{{ '코드유형' | translate }}" 
+                                [placeholder]=""
+                                [value]="comFun.valEmpty(searchModel.cdType)"
+                                (keyup)="searchModel.cdType = $event.sender.rawValue"
+                                (blur)="searchModel.cdType = $event.sender.rawValue"
+                            ></ExtTextfield>
+                        </ExtFieldset>
+
+                        <ExtFieldset>
+                            <ExtTextfield label="{{ '코드명' | translate }}" 
+                                [placeholder]=""
+                                [value]="comFun.valEmpty(searchModel.cdNm)"
+                                (keyup)="searchModel.cdNm = $event.sender.rawValue"
+                                (blur)="searchModel.cdNm = $event.sender.rawValue"
+                            ></ExtTextfield>
+                        </ExtFieldset>
+
+                    </ExtContainer>
+
+                    <!-- Vertical 2 -->
+                    <ExtContainer [layout]="{ type: 'box', vertical: true }" [flex]="1">
+                        <ExtFieldset [margin]="this.envService.formMargin">
+                            <ExtPanel title="line" margin="-5 0 0 0" [height]="2"></ExtPanel>
+                        </ExtFieldset>
+
+                        <!-- ITEM -->
+                        <ExtFieldset>
+                            <ExtCombobox label="{{ '사용여부' | translate }}" 
+                                placeholder=""
+                                [value]="comFun.valEmpty(searchModel.useYn)"
+                                (select)="searchModel.useYn = $event.newValue.data.cdData"
+                                (clearicontap)="searchModel.useYn = ''" 
+                                [editable]="true"
+                                [store]="getLookupDataSource('USE_YN')" 
+                                [valueField]="'cdData'" 
+                                [displayField]="'cdNm'"
+                                [queryMode]="'local'" 
+                                [clearable]="true" 
+                                [textAlign]="'left'"
+                                [forceSelection]="true"
+                            ></ExtCombobox>
+                        </ExtFieldset>
+                    </ExtContainer>
+
+                    <!-- Vertical 3 -->
+                    <ExtContainer [layout]="{ type: 'box', vertical: true }" [flex]="1">
+                        <ExtFieldset [margin]="this.envService.formMargin">
+                            <ExtPanel title="line" margin="-5 0 0 0" [height]="2"> </ExtPanel>
+                        </ExtFieldset>
+
+                        <!-- ITEM -->
+                        <ExtFieldset>
+                            
+                        </ExtFieldset>
+                    </ExtContainer>
+
+                    <!-- Vertical 4 -->
+                    <ExtContainer [layout]="{ type: 'box', vertical: true }" [flex]="1">
+                        <ExtFieldset [margin]="this.envService.formMargin">
+                            <ExtPanel title="line" margin="-5 0 0 0" [height]="2"> </ExtPanel>
+                        </ExtFieldset>
+
+                        <!-- ITEM -->
+                        <ExtFieldset>
+                            
+                        </ExtFieldset>
+                    </ExtContainer>
+
+                    <!-- Vertical 5 -->
+                    <ExtContainer [layout]="{ type: 'box', vertical: true }" [flex]="1">
+                        <ExtFieldset [margin]="this.envService.formMargin">
+                            <ExtPanel title="line" margin="-5 0 0 0" [height]="2"> </ExtPanel>
+                        </ExtFieldset>
+
+                        <!-- ITEM -->
+                        <ExtFieldset>
+                            
+                        </ExtFieldset>
+                    </ExtContainer>
+
+                </ExtContainer>
+            </ExtFormpanel>
+        </ExtPanel>
+
+        <!-- Header -->
+        <ExtPanel [layout]="'fit'" [flex]="1" >
+            <!-- main left -->
+            <ExtPanel 
+                [flex]="1" 
+                [border]="true" 
+            >
+                <ExtContainer 
+                    layout="fit" 
+                    fitToParent="true" 
+                    [flex]="1"
+                >
+                    <ExtTitlebar 
+                            docked="top" 
+                            [platformConfig]="{ 
+                            phone   : { titleAlign: 'center' } 
+                        ,   desktop : { titleAlign: 'left' }
+                        }" 
+                        [height]="30"
+                    >
+                        <ExtTitle [title]="'공통코드'" [style]="{'font-size': '13px', 'margin-bottom': '13px'}"></ExtTitle>
+                    </ExtTitlebar>
+                    <div #extitem style="width: 100%; height: 100%;">
+                        <ag-grid-angular 
+                            #agGrid 
+                            style="width: 100%; height: 100%;" class="ag-theme-balham" 
+                            [rowData]="headerGridConfig.rowData"
+                            [defaultColDef]="headerGridConfig.defaultColDef" 
+                            [columnDefs]="headerGridConfig.columnDefs"
+                            [enableCellChangeFlash]="true" 
+                            [rowDragManaged]="true" 
+                            [animateRows]="true"
+                            [undoRedoCellEditing]="headerGridConfig.isUndo"
+                            [undoRedoCellEditingLimit]="headerGridConfig.undoLimit"
+                            [suppressRowClickSelection]="false" 
+                            [groupSelectsChildren]="true" 
+                            rowSelection="multiple"
+                            [frameworkComponents]="envService.frameworkComponents"
+                            (gridReady)="headerGridConfig.onReadyGrid($event)"
+                            (cellValueChanged)="headerGridConfig.onCellValueChanged($event)"
+                            (selectionChanged)="headerGridSelectRowChanged($event)"
+                        >
+                        </ag-grid-angular>
+                    </div>
+                    
+                </ExtContainer>
+            </ExtPanel>
+
+            <!--Detail -->
+            <ExtPanel [flex]="1" layout="fit" [border]="true" [maxWidth]="1200" [minWidth]="200" width="800px" docked="right" [resizable]="{edges: 'west', dynamic: true}">
+                <ExtContainer layout="fit" fitToParent="true" [flex]="1">
+                    <ExtTitlebar 
+                            docked="top" 
+                            [platformConfig]="{ 
+                            phone   : { titleAlign: 'center' } 
+                        ,   desktop : { titleAlign: 'left' }
+                        }" 
+                        [height]="30"
+                    >
+                        <ExtTitle [title]="'상세코드'" [style]="{'font-size': '13px', 'margin-bottom': '13px'}"></ExtTitle>
+                    </ExtTitlebar>
+
+                    <div #extitem style="width: 100%; height: 100%;">
+                        <ag-grid-angular 
+                            #agGrid 
+                            style="width: 100%; height: 100%;" class="ag-theme-balham" 
+                            [rowData]="detailGridConfig.rowData"
+                            [defaultColDef]="detailGridConfig.defaultColDef" 
+                            [columnDefs]="detailGridConfig.columnDefs"
+                            [enableCellChangeFlash]="true" 
+                            [rowDragManaged]="true" 
+                            [animateRows]="true"
+                            [undoRedoCellEditing]="detailGridConfig.isUndo"
+                            [undoRedoCellEditingLimit]="detailGridConfig.undoLimit"
+                            [suppressRowClickSelection]="false" 
+                            [groupSelectsChildren]="true" 
+                            rowSelection="multiple"
+                            (gridReady)="detailGridConfig.onReadyGrid($event)"
+                            (cellValueChanged)="detailGridConfig.onCellValueChanged($event)"
+                        >
+                        </ag-grid-angular>
+                    </div>
+                </ExtContainer>
+            </ExtPanel>
+        </ExtPanel>
+    </ExtPanel>
+</ExtContainer>

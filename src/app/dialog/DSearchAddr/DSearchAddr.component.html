@@ -1,0 +1,101 @@
+<ExtDialog [displayed]="isDlSearchAddrDialog" title="{{ '주소검색' | translate }}" iconCls="x-fa fa-seedling"
+    [maximizable]="true" [closable]="true" [closeAction]="'hide'" [bodyPadding]="10" (hide)="this.onHide()" width="70%"
+    height="70%" [keyMapEnabled]="false" (ready)="this.comFun.keyMap($event,this)">
+    <ExtContainer padding="0" layout="fit" fitToParent="true">
+        <ExtContainer padding="0" layout="fit" fitToParent="true">
+            <!-- contnent-->
+            <ExtPanel [shadow]="true" [layout]="{ type: 'vbox', align: 'strech' }" [border]="true" [scrollable]="true">
+                <!--search Form-->
+                <ExtPanel [layout]="'fit'" [height]="'50px'" docked="top" [resizable]="{edges: 'south', dynamic: true}"
+                    [maxHeight]="'50px'" [minHeight]="'50px'">
+                    <ExtFormpanel (ready)="''" [scrollable]="false">
+                        <!-- line 1 -->
+                        <!-- <ExtContainer [layout]="{ type: 'box', vertical: true}">
+                            <ExtFilefield
+                                (ready)="this.filefieldCmp = $event.cmp"
+                                [label]="'첨부파일'"
+                                (change)="onChangeFile($event)"
+                                [multiple]="false"
+                            >
+                            </ExtFilefield>
+                        </ExtContainer> -->
+
+                        <ExtFieldset [layout]="'hbox'" margin="-8 0 0 0">
+                            <ExtContainer [layout]="{ type: 'box', vertical: true }" width="50%">
+                                <ExtFieldset>
+                                    <!-- (keyup)="this.dlSearchAddrTrigger($event)"  -->
+                                    <ExtTextfield label="{{ '주소' | translate }}" [placeholder]=""
+                                        [disabled]="this.isApiResponse" [height]="30"
+                                        (keyup)="this.searchModel.search = $event.sender.rawValue"
+                                        (blur)="this.searchModel.search = $event.sender.rawValue"
+                                        [value]="comFun.valEmpty(this.searchModel.search)"
+                                        (clearicontap)="this.searchModel.search = ''">
+                                    </ExtTextfield>
+                                </ExtFieldset>
+                            </ExtContainer>
+
+                            <!--trigger 삭제 후 버튼 생성.-->
+                            <ExtFieldset>
+                                <ExtButton (tap)="onTapQuery()" iconCls="x-fa fa-search" ui="action">
+                                </ExtButton>
+                            </ExtFieldset>
+
+                            <ExtContainer [layout]="{ type: 'box', vertical: true }" width="20%"></ExtContainer>
+
+                            <ExtContainer [layout]="{ type: 'box', vertical: true }">
+                                <ExtFieldset>
+                                    <ExtButton [align]="'left'" [ui]="'ui'" [style]='{ "float": "right" }'
+                                        iconCls="x-fa fa-arrow-circle-left" [disabled]="this.isApiResponse"
+                                        (tap)="preOnTapQuery()"></ExtButton>
+                                </ExtFieldset>
+                            </ExtContainer>
+
+                            <ExtContainer [layout]="{ type: 'box', vertical: true }" width="10%">
+                                <ExtLabel html='{{this.rowStackNum}}/{{this.searchModel.pageSize}}'
+                                    style="font-size: 12px; font-weight: bold; margin-top: 12px; color: #53738C; text-align: center; vertical-align:middle;">
+                                </ExtLabel>
+                            </ExtContainer>
+
+                            <ExtContainer [layout]="{ type: 'box', vertical: true }">
+                                <ExtFieldset>
+                                    <ExtButton [align]="'left'" [ui]="'ui'" [style]='{ "float": "right" }'
+                                        iconCls="x-fa fa-arrow-circle-right" [disabled]="this.isApiResponse"
+                                        (tap)="nextOnTapQuery()"></ExtButton>
+                                </ExtFieldset>
+                            </ExtContainer>
+                        </ExtFieldset>
+                    </ExtFormpanel>
+                </ExtPanel>
+
+
+                <!-- main area -->
+                <ExtPanel [layout]="'fit'" [flex]="1">
+                    <ExtContainer layout="fit" fitToParent="true">
+                        <div #extitem style="width: 100%; height: 100%;">
+                            <ag-grid-angular #agGrid (gridReady)="this.onGridReadyFn($event)"
+                                style="width: 100%; height: 100%;" class="ag-theme-balham"
+                                [rowData]="this.gridMain.rowData" [defaultColDef]="this.gridMain.defaultColDef"
+                                [columnDefs]="this.gridMain.columnDefs"
+                                (sortChanged)="this.comFun.onSortChanged($event)"
+                                [frameworkComponents]="this.envService.frameworkComponents"
+                                [getRowClass]="this.envService.getRowClass" (rowClicked)="this.onSelectRow($event)"
+                                [enableCellChangeFlash]="true" [rowDragManaged]="true" [animateRows]="true"
+                                [suppressRowClickSelection]="false" rowSelection="multiple">
+                            </ag-grid-angular>
+                        </div>
+
+                    </ExtContainer>
+                </ExtPanel>
+            </ExtPanel>
+        </ExtContainer>
+
+    </ExtContainer>
+
+    <ExtToolbar docked="bottom" [layout]="{ type: 'hbox', pack: 'right' }" [style]='{
+            "background": "#ffffff"
+        }'>
+        <ExtButton [align]="'right'" [ui]="'round'" iconCls="x-fa fa-times" (tap)="this.onCancel()"
+            text="{{ '닫기' | translate }}">
+        </ExtButton>
+    </ExtToolbar>
+</ExtDialog>

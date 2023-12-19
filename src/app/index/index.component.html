@@ -1,0 +1,143 @@
+<ExtContainer [viewport]="true" layout="vbox" padding="0 0 0 0">
+  <!-- <app-codeDialog></app-codeDialog> -->
+  <app-index-modal [node]="this.modalParam.nodeItem"></app-index-modal>
+  <ExtPanel [flex]="1">
+    <ExtContainer layout="fit" [fitToParent]="true" padding="0 0 0 0" #dashboardMain>
+      <ExtTitlebar docked="top" [height]="50" [weight]="10" [title]="envService.progName" [platformConfig]="{ 
+          phone   : { titleAlign: 'center' } 
+      ,   desktop : { titleAlign: 'left' }
+      }">
+        <ExtButton iconCls="x-fa fa-bars" [ui]="'alt round'" (tap)="toggleAppMenu($event)" ripple="false">
+        </ExtButton>
+        <ExtButton [align]="'right'" [ui]="'alt round'" [style]='{ "float": "right" }' iconCls="x-fa fa-sign-out-alt"
+          (tap)="onConfirmLogout()" tooltip="{{'로그아웃' | translate}}"></ExtButton>
+      </ExtTitlebar>
+
+      <!--[resizable]="{edges: 'east', dynamic: false}" -->
+      <ExtPanel [weight]="10" docked="left" scrollable="y"  [style]="{zIndex: 100, backgroundColor: 'white' , width :this.tabMenuSize}"
+        [header]="false" [collapsible]="{ direction: 'left' }" [collapsed]="false" [shadow]="true"
+        [hidden]="hideAppMenu">
+        <ExtPanel docked="top" margin="1">
+          <div #extitem class="card card-default">
+            <img class="card-img-top img-responsive" width="100%" height="60px;" src="assets/images/ssofTitle.svg" alt="Image">
+            <div class="card-block">
+              <h4 class="card-title" style="font-size: 14px;"><i
+                  class="fa fa-user"></i>&nbsp;{{envService.userInfo.userId + ' / ' + envService.userInfo.userNm}}</h4>
+              <div class="comment-links clearfix">
+                <a style="font-size: 12px; color: black;" (click)="myPage()">마이페이지🔒</a>
+                <!--<a style="font-size: 12px; color: black;" (click)="myPage()">🔒</a>-->
+                <!-- <a href=""><i class="fa fa-share-alt"></i>22</a><a href=""><i class="fa fa-comments-o"></i>106</a><a href=""><i class="fa fa-heart text-danger"></i>862</a> -->
+              </div>
+            </div>
+          </div>
+        </ExtPanel>
+        <ExtPanel docked="top" margin="1">
+          <div #extitem>
+            <ul class="nav nav-tabs" id="menuTab" role="tablist">
+              <li class="nav-item">
+                <a class="nav-link active" id="menu-tab" data-toggle="tab" role="tab" style="cursor: pointer;"
+                  aria-controls="menu" (click)="bootNavClick(this, 'M')" aria-selected="true">{{'메뉴' | translate}}</a>
+              </li>
+            </ul>
+          </div>
+        </ExtPanel>
+        <!--메뉴 TreeList-->
+        <ExtPanel (ready)="onMenuTreeListReady($event)">
+          <ExtTreelist (ready)="onTreeListReady($event)" (selectionchange)="selectionchangeNavTreeList($event)"
+            (itemclick)="onItemClickTreeList($event)" ref="tree" ui="nav" margin="3" [store]="treeStore"
+            [expanderFirst]="false" [expanderOnly]="false" [selectOnExpander]="false">
+          </ExtTreelist>
+        </ExtPanel>
+
+        <!--즐겨찾기 TreeList-->
+        <ExtPanel (ready)="onBookMarkTreeListReady($event)">
+          <ExtSearchfield docked="top" ui="faded" margin="7" (change)="filterBookMarkNav($event)"
+            placeholder="{{ 'menuplaceholder'| translate }}" [style]='{
+                "background": "#ffffff"
+            }'>
+          </ExtSearchfield>
+          <ExtTreelist (ready)="onTreeListReadyBm($event)" (selectionchange)="selectionchangeNavTreeList($event)"
+            (itemclick)="onItemClickTreeList($event)" ref="tree" ui="nav" margin="3" [store]="treeStoreBm"
+            [expanderFirst]="true" [expanderOnly]="false" [selectOnExpander]="false" [style]>
+          </ExtTreelist>
+        </ExtPanel>
+      </ExtPanel>
+
+      <!--싱글-->
+      <!-- <ExtPanel  padding="5 5 5 5" [flex]="1" [hidden]="this.envService.Setting.view === 'tab' ? true : false">
+        <div #extitem style="width: 100%; height: 100%;">
+          <router-outlet #extitem></router-outlet>
+        </div>
+      </ExtPanel> -->
+
+      <!--multi tab-->
+      <!-- <ExtPanel  padding="1 0 0 1" [flex]="1" [hidden]="this.envService.Setting.view === 'tab' ? false : true"> -->
+      <ExtPanel padding="1 0 0 1" [flex]="1">
+        <ExtContainer layout="fit" fitToParent="true">
+          <ExtTabpanel [flex]="1" (ready)="tabPanelReady($event)"
+            [tabBarPosition]="this.tabPos" [tabBar]="{ 
+              height : '35',
+              layout: { 
+                pack: 'start', 
+                overflow: 'scroller'
+              } 
+            }" [shadow]="false">
+            <ExtPanel [title]="dashboardNode.text" layout="fit">
+              <div #extitem style="width: 100%; height: 100%;">
+                <app-index-dashboard [node]="dashboardNode"></app-index-dashboard>
+              </div>
+            </ExtPanel>
+            <!-- (activate)="isBookMark(tab)" -->
+            <ExtPanel *ngFor="let tab of tabs" closable="true" [title]="tab.text.concat('&nbsp;&nbsp;&nbsp;&nbsp;')"
+              (destroy)="closeTab($event, tab.id)">
+              <div #extitem style="width: 100%; height: 100%;" [style]="{ backgroundColor: '#ffffff'}">
+                <app-index-tabz [node]="tab"></app-index-tabz>
+              </div>
+            </ExtPanel>
+          </ExtTabpanel>
+        </ExtContainer>
+        <ExtTitlebar 
+          docked="bottom" 
+          [platformConfig]="{ 
+            phone   : { titleAlign: 'center' } 
+          , desktop : { titleAlign: 'left' }
+          }" 
+          [height]="30"
+        >
+          <ExtTitle [title]="'상세코드'" [style]="{'font-size': '13px', 'margin-bottom': '13px'}"></ExtTitle>
+        </ExtTitlebar>
+        <!-- <ExtToolbar docked="bottom" [shadow]="false" [layout]="{ type: 'hbox', pack: 'right' }" class="title-toolbar">
+          <ExtButton  [align]="'right'" [ui]="'round'" iconCls="x-fa fa-search"text="{{ '조회' | translate }}" ></ExtButton>
+        </ExtToolbar> -->
+
+      </ExtPanel>
+
+      <ExtPanel docked="right" [hidden]="false" [collapsed]="isCollapse" [weight]="5" width="300" layout="fit"
+        [style]="{zIndex: 3}" [resizable]="{ edges: 'west', dynamic: true }" [header]="false"
+        [collapsible]="{ direction: 'right' }">
+        <ExtContainer layout="fit" flex="1">
+          <ExtTitlebar docked="top" title="{{'설정' | translate}}">
+            <ExtButton [align]="'right'" [ui]="'alt round'" [style]='{ "float": "right" }'
+              iconCls="x-fa fa-chevron-right" (tap)="onTabSetting($event)"></ExtButton>
+          </ExtTitlebar>
+
+          <ExtPanel [layout]="'fit'" [flex]="1">
+            <ExtFormpanel>
+              <ExtFieldset [width]="'100%'" [defaults]="{ labelAlign: 'placeholder' }">
+                <ExtCombobox label="{{ '언어' | translate}}" [store]="this.envService.langsStore"
+                  [value]="this.envService.langs" placeholder="{{ 'selectPlaceholder' | translate}}"
+                  [valueField]="'comboId'" [displayField]="'comboNm'" [queryMode]="'local'" [clearable]="true"
+                  (change)="switchLanguage($event)">
+                </ExtCombobox>
+                <ExtCombobox label="{{ 'tabPos' | translate}}" [store]="this.tabStore" [value]="this.tabPos"
+                  placeholder="{{ 'selectPlaceholder' | translate}}" [valueField]="'comboId'" [displayField]="'comboNm'"
+                  [queryMode]="'local'" [clearable]="true" (change)="switchTabPos($event)">
+                </ExtCombobox>
+              </ExtFieldset>
+            </ExtFormpanel>
+          </ExtPanel>
+        </ExtContainer>
+      </ExtPanel>
+    </ExtContainer>
+  </ExtPanel>
+</ExtContainer>

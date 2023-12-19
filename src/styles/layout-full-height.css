@@ -1,0 +1,164 @@
+/* Reset and overrides */
+
+*{
+  	-webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+*:before,
+*:after {
+  	-webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.scroll-style
+{
+    height: 100%;
+    width: 100%;
+    overflow-y: scroll;
+}
+
+/* Vertical Box Setting */
+.vertical-box {
+    display: table; 
+    table-layout: fixed; 
+    border-spacing: 0; 
+    height: 100%;
+    width: 100%;
+}
+.vertical-box-column {
+    display: table-cell;
+    vertical-align: top;
+    height: 100%;
+}
+.vertical-box-row {
+    display: table-row;
+    height: 100%;
+}
+.vertical-box-row > .vertical-box-cell {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    float: none;
+}
+.vertical-box-row > .vertical-box-cell > .vertical-box-inner-cell {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    overflow: hidden;
+}
+.vertical-box .vertical-box-column {
+    display: table-cell;
+}
+.vertical-box.with-border .vertical-box-column {
+	border-left: 1px solid #C8C7CC;
+	border-right: 1px solid #C8C7CC;
+}
+.vertical-box.with-border .wrapper + .vertical-box-row > .vertical-box-cell,
+.vertical-box.with-border .vertical-box-row + .wrapper {
+	border-top: 1px solid #C8C7CC;
+}
+.vertical-box.with-border .vertical-box-column:first-child {
+	border-left: none;
+}
+.vertical-box.with-border .vertical-box-column:last-child {
+	border-right: none;
+}
+.vertical-box.with-border .vertical-box-column + div {
+	border-left: none;
+}
+@media (max-width: 767px) {
+	.vertical-box,
+	.vertical-box-column,
+	.vertical-box-row,
+	.vertical-box-cell,
+	.vertical-box-inner-cell {
+		display: block !important;
+		width: auto !important;
+		height: auto !important;
+		position: initial !important;
+		overflow: initial !important;
+		border-left: none !important;
+		border-right: none !important;
+	}
+	.vertical-box.with-border .vertical-box-column + .vertical-box-column {
+		border-top: 1px solid #C8C7CC;
+	}
+}
+
+/* SlimScrollBar Setting */
+.slimScrollBar {
+	background: none !important;
+	width: 8px !important;
+	-webkit-transition: opacity .2s linear;
+	-moz-transition: opacity .2s linear;
+	transition: opacity .2s linear;
+	opacity: 0 !important;
+	right: 0 !important;
+}
+.slimScrollDiv:hover .slimScrollBar,
+.slimScrollDiv:focus .slimScrollBar,
+.slimScrollDiv:active .slimScrollBar {
+	display: block !important;
+	opacity: 0.5 !important;
+}
+.slimScrollDiv .slimScrollBar:hover,
+.slimScrollDiv .slimScrollBar:focus,
+.slimScrollDiv .slimScrollBar:active {
+	opacity: 0.75 !important;
+	width: 10px !important;
+}
+.slimScrollBar:before {
+	content: '';
+	position: absolute;
+	top: 2px;
+	left: 0;
+	right: 2px;
+	bottom: 2px;
+	border-radius: 40px;
+	background: #000;
+	opacity: 0.5;
+}
+
+.wrapper { padding: 15px !important; }
+
+/* Width & Height Classes */
+.height-xs { height: 150px !important; }
+.height-sm { height: 300px !important; }
+.height-md { height: 450px !important; }
+.height-lg { height: 600px !important; }
+.height-full { height: 100% !important; }
+.height-50 { height: 50px !important; }
+.height-100 { height: 100px !important; }
+.height-150 { height: 150px !important; }
+.height-200 { height: 200px !important; }
+.height-250 { height: 250px !important; }
+.height-300 { height: 300px !important; }
+.height-350 { height: 350px !important; }
+.height-400 { height: 400px !important; }
+.height-450 { height: 450px !important; }
+.height-500 { height: 500px !important; }
+.height-550 { height: 550px !important; }
+.height-600 { height: 600px !important; }
+
+.width-xs { width: 150px !important; }
+.width-sm { width: 300px !important; }
+.width-md { width: 450px !important; }
+.width-lg { width: 600px !important; }
+.width-full { width: 100% !important; }
+.width-50 { width: 50px !important; }
+.width-100 { width: 100px !important; }
+.width-150 { width: 150px !important; }
+.width-200 { width: 200px !important; }
+.width-250 { width: 250px !important; }
+.width-300 { width: 300px !important; }
+.width-350 { width: 350px !important; }
+.width-400 { width: 400px !important; }
+.width-450 { width: 450px !important; }
+.width-500 { width: 500px !important; }
+.width-550 { width: 550px !important; }
+.width-600 { width: 600px !important; }
+.width-lg { width: 70%; }

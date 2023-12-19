@@ -1,0 +1,146 @@
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1" />
+
+<ExtContainer [defaults]="{
+        flex: 1
+    }" [layout]="{
+        type: 'hbox', 
+        pack: 'center', 
+        align: 'stretch'
+    }">
+    <ExtToolbar [docked]="'top'" [shadow]="false" [layout]="{ type: 'hbox', pack: 'right' }" class="title-toolbar"
+        style="background-color: white;"
+    >
+
+        <ExtButton [disabled]="this.btnDisable.modifyBtn" [align]="'right'" [ui]="'round'" iconCls="x-fa fa-eraser"
+            (tap)="labelHiddenEvent()" text="{{ '수정' | translate }}" tooltip="F3">
+        </ExtButton>
+
+        <ExtButton [disabled]="this.btnDisable.saveBtn" [align]="'right'" [ui]="'round'" iconCls="x-fa fa-save"
+            (tap)="saveInfo(inputNkn)" text="{{ '저장' | translate }}" tooltip="F2">
+        </ExtButton>
+
+        <ExtButton [disabled]="this.btnDisable.cancelBtn" [align]="'right'" [ui]="'round'" iconCls="x-fa fa-times"
+            (tap)="cencleBtn()" text="{{ '취소' | translate }}" tooltip="F12">
+        </ExtButton>
+    </ExtToolbar>
+
+    <ExtPanel [layout]="'box'" height="800px" width="500px">
+        <ExtTitlebar [title]="'마이페이지'" docked="top" [platformConfig]="{ 
+        phone   : { titleAlign: 'center' } 
+    ,   desktop : { titleAlign: 'left' }
+    }" [style]='{ "background": "#01579b" }'>
+        </ExtTitlebar>
+        <ExtContainer [style]='{ "background": "#ffffff" ,"border":"1px solid black" }' [flex]="1">
+
+            <ExtTitlebar [padding]="'0'" title="<span style='color: black; margin-left:10px'>아이디</span>" titleAlign="left" docked="top" [style]='{ "background": "#ffffff"}'>
+                <ExtLabel margin="0 75 0 0" [align]="'right'" [html]="this.formModel.userId" style="color: black;font-size: 16px;">
+                </ExtLabel>
+
+                <!-- <ExtTextfield *ngIf="labelHidden" margin="0 75 0 0" [align]="'right'" [value]="formModel.userId" (keyup)="inputId = $event.sender.rawValue"
+                    style="color: black; font-size: 16px; background-color: transparent; border: none; text-decoration: none;">
+                </ExtTextfield> -->
+            </ExtTitlebar>
+
+
+            <!-- <ExtTitlebar [padding]="'0'"  title="<span style='color: black; margin-left:10px'>비밀번호</span>" docked="top" titleAlign="left"
+                [style]='{ "background": "#ffffff"}'>
+                <ExtLabel margin="0 75 0 0" [align]="'right'" [html]="this.formModel.userPwd" style="color: black;font-size: 16px;" [disabled]="textDisabled">
+                </ExtLabel>
+            </ExtTitlebar> -->
+
+            <ExtTitlebar [padding]="'0'"  title="<span style='color: black; margin-left:10px'>닉네임</span>" docked="top" [style]='{ "background": "#ffffff"}' titleAlign="left">
+                <ExtLabel *ngIf="!labelHidden" margin="0 75 0 0" [align]="'right'" [html]="this.formModel.userNkn" style="color: black;font-size: 16px;" [disabled]="textDisabled"></ExtLabel>
+                
+                <ExtTextfield *ngIf="labelHidden" margin="0 75 0 0" [align]="'right'" [value]="formModel.userNkn" (keyup)="inputNkn = $event.sender.rawValue"  
+                    style="color: black; font-size: 16px; background-color: transparent; border: none; text-decoration: none;">
+                </ExtTextfield>
+            </ExtTitlebar>
+
+            <ExtTitlebar [padding]="'0'"  title="<span style='color: black; margin-left:10px'>사용자 번호</span>" docked="top" [style]='{ "background": "#ffffff"}' titleAlign="left">
+                <ExtLabel margin="0 75 0 0" [align]="'right'" [html]="this.formModel.userNo" style="color: black;font-size: 16px;" [disabled]="textDisabled">
+                </ExtLabel>
+            </ExtTitlebar>
+
+            <ExtTitlebar [padding]="'0'"  title="<span style='color: black; margin-left:10px'>등록 사용자</span>" docked="top" [style]='{ "background": "#ffffff"}' titleAlign="left">
+                <ExtLabel margin="0 75 0 0" [align]="'right'" [html]="this.formModel.regUser" style="color: black;font-size: 16px;" [disabled]="textDisabled">
+                </ExtLabel>
+            </ExtTitlebar>
+
+            <ExtTitlebar [padding]="'0'"  title="<span style='color: black; margin-left:10px'>등록일자</span>" docked="top" titleAlign="left"
+                [style]='{ "background": "#ffffff"}'>
+                <ExtLabel margin="0 75 0 0" [align]="'right'" [html]="this.formModel.regDt" style="color: black;font-size: 16px;" [disabled]="textDisabled">
+                </ExtLabel>
+            </ExtTitlebar>
+
+            <ExtTitlebar [padding]="'0'"  title="<span style='color: black; margin-left:10px'>사용여부</span>" docked="top"titleAlign="left"
+                [style]='{ "background": "#ffffff"}'>
+                <ExtLabel margin="0 75 0 0" [align]="'right'" [html]="this.formModel.useYn" style="color: black;" [disabled]="textDisabled"></ExtLabel>
+            </ExtTitlebar>
+
+            <!-- <ExtTitlebar [padding]="'0'"  title="<span style='color: black; margin-left:10px'>디지털원패스 연동</span>" docked="top" titleAlign="left"
+                [style]='{ "background": "#ffffff"}'>
+                <ExtLabel [align]="'right'" style="color: black;">
+                </ExtLabel>
+                <ExtButton margin="0 0 0 5"  [align]="'right'" [ui]="'round'" text="연동해지">
+                </ExtButton>
+            </ExtTitlebar> -->
+        </ExtContainer>
+    </ExtPanel>
+</ExtContainer>
+
+
+<!-- 모바일
+<ExtContainer [defaults]="{
+    flex: 1
+}" [layout]="{
+    type: 'hbox', 
+    pack: 'center', 
+    align: 'stretch'
+}" [hidden]="hiddenMobile">
+<ExtPanel [layout]="'box'" height="700px" width="500px">
+    <ExtTitlebar [title]="'마이페이지'" docked="top" [platformConfig]="{ 
+    phone   : { titleAlign: 'center' } 
+,   desktop : { titleAlign: 'left' }
+}" [style]='{ "background": "#01579b" }'>
+    </ExtTitlebar>
+    <ExtContainer [style]='{ "background": "#ffffff" ,"border":"1px solid black" }' [flex]="1">
+        <ExtTitlebar [padding]="'0'" title="<span style='color: black; margin-left:10px'>아이디</span>" titleAlign="left" docked="top" [style]='{ "background": "#ffffff"}'>
+            <ExtLabel margin="0 75 0 0" [align]="'right'" [html]="this.formModel.userId" style="color: black;">
+            </ExtLabel>
+        </ExtTitlebar>
+
+        <ExtTitlebar [padding]="'0'"  title="<span style='color: black; margin-left:10px'>이름</span>" docked="top" [style]='{ "background": "#ffffff"}' titleAlign="left">
+            <ExtLabel margin="0 75 0 0" [align]="'right'" [html]="this.formModel.userNm" style="color: black;font-size: 16px;">
+            </ExtLabel>
+        </ExtTitlebar>
+
+        <ExtTitlebar [padding]="'0'"  title="<span style='color: black; margin-left:10px'>휴대폰</span>" docked="top" [style]='{ "background": "#ffffff"}' titleAlign="left">
+            <ExtLabel [align]="'right'" [html]="this.formModel.phoneNo" style="color: black;"></ExtLabel>
+            <ExtButton margin="0 0 0 5"  [align]="'right'" [ui]="'round'" text="수정" (tap)="this.openDMyPagePhone()">
+            </ExtButton>
+        </ExtTitlebar>
+
+        <ExtTitlebar [padding]="'0'"  title="<span style='color: black; margin-left:10px'>전화번호</span>" docked="top" titleAlign="left"
+            [style]='{ "background": "#ffffff"}'>
+            <ExtLabel [align]="'right'" [html]="this.formModel.telNo" style="color: black;">
+            </ExtLabel>
+            <ExtButton margin="0 0 0 5"  [align]="'right'" [ui]="'round'" text="수정" (tap)="this.openDMyPageTelNo()">
+            </ExtButton>
+        </ExtTitlebar>
+
+        <ExtTitlebar [padding]="'0'"  title="<span style='color: black; margin-left:10px'>비밀번호</span>" docked="top" titleAlign="left"
+            [style]='{ "background": "#ffffff"}'>
+            <ExtLabel [align]="'right'" [html]="''" style="color: black;">
+            </ExtLabel>
+            <ExtButton margin="0 0 0 5"  [align]="'right'" [ui]="'round'" text="수정" (tap)="this.openDMyPagePw()">
+            </ExtButton>
+        </ExtTitlebar>
+
+        <ExtTitlebar [padding]="'0'"  title="<span style='color: black; margin-left:10px'>인증여부</span>" docked="top"titleAlign="left"
+            [style]='{ "background": "#ffffff"}'>
+            <ExtLabel margin="0 75 0 0" [align]="'right'" [html]="this.formModel.vfcYn" style="color: black;"></ExtLabel>
+        </ExtTitlebar>
+
+    </ExtContainer>
+</ExtPanel>
+</ExtContainer> -->

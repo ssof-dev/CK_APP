@@ -1,0 +1,253 @@
+<ExtContainer padding="0" layout="fit" fitToParent="true" (ready)="this.comFun.keyMap($event,this)">
+
+    <ExtToolbar [docked]="'top'" [shadow]="false" [layout]="{ type: 'hbox', pack: 'right' }" class="title-toolbar"
+        style="background-color: white;"
+    >
+        <ExtButton [disabled]="this.btnDisable.newBtn" [align]="'right'" [ui]="'round'" iconCls="x-fa fa-edit"
+            text="{{ '신규' | translate }}" tooltip="F5">
+        </ExtButton>
+
+        <ExtButton [disabled]="this.btnDisable.modifyBtn" [align]="'right'" [ui]="'round'" iconCls="x-fa fa-eraser"
+            (tap)="editBtn_first()" text="{{ '수정' | translate }}" tooltip="F3">
+        </ExtButton>
+
+        <ExtButton [disabled]="this.btnDisable.deleteBtn" [align]="'right'" [ui]="'round'" iconCls="x-fa fa-trash-alt"
+            text="{{ '삭제' | translate }}" tooltip="F4">
+        </ExtButton>
+
+        <ExtButton [disabled]="this.btnDisable.saveBtn" [align]="'right'" [ui]="'round'" iconCls="x-fa fa-save"
+            text="{{ '저장' | translate }}" tooltip="F2">
+        </ExtButton>
+
+        <ExtButton [disabled]="this.btnDisable.cancelBtn" [align]="'right'" [ui]="'round'" iconCls="x-fa fa-times"
+            text="{{ '취소' | translate }}" tooltip="F12">
+        </ExtButton>
+    </ExtToolbar>
+
+    <ExtPanel [shadow]="true" [layout]="{type: 'vbox', align: 'stretch'}" style="background-color: white;">
+        
+        <ExtPanel [flex]="1" [border]="true" [layout]="{type: 'hbox', align: 'stretch'}">
+            <ExtPanel [flex]="1" [border]="true">
+                <div #extitem style="width: 100%; height: 100%;">
+                    <ag-grid-angular 
+                        #agGrid 
+                        style="width: 100%; height: 100%;" class="ag-theme-balham" 
+                        [rowData]="compmGridConfig.rowData"
+                        [defaultColDef]="compmGridConfig.defaultColDef" 
+                        [columnDefs]="compmGridConfig.columnDefs"
+                        [enableCellChangeFlash]="true" 
+                        [rowDragManaged]="true" 
+                        [animateRows]="true"
+                        [undoRedoCellEditing]="compmGridConfig.isUndo"
+                        [undoRedoCellEditingLimit]="compmGridConfig.undoLimit"
+                        [suppressRowClickSelection]="compmGridConfig.gridClickOption" 
+                        [groupSelectsChildren]="true" 
+                        rowSelection="multiple"
+                        (gridReady)="compmGridConfig.onReadyGrid($event)"
+                        (cellValueChanged)="compmGridConfig.onCellValueChanged($event)"
+                        (selectionChanged)="compmGridSelection($event)"
+                    >
+                    </ag-grid-angular>
+                </div>
+            </ExtPanel>
+            <ExtPanel [flex]="1" [border]="true" [layout]="{type: 'vbox', align: 'stretch'}">
+
+                <ExtFormpanel [data]="compmModel" [flex]="1" padding="0" layout="vbox" [bodyStyle]="{'background': '#ffffff'}">
+                    <ExtFieldset>
+                        <ExtTextfield label="사업업체번호" [disabled]="this.compmFormDisable" [value]="compmModel.useCompNo"></ExtTextfield>
+                    </ExtFieldset>
+                    
+                    <ExtFieldset>
+                        <ExtTextfield label="사업업체명칭" [disabled]="this.compmFormDisable" [value]="compmModel.useCompNm"></ExtTextfield>
+                    </ExtFieldset>
+
+                    <ExtFieldset layout="hbox">
+                        <ExtTextfield label="업태" [disabled]="this.compmFormDisable" width="50%" [value]="compmModel.busiBtypeNm"></ExtTextfield>
+
+                        <ExtTextfield label="종목" [disabled]="this.compmFormDisable" width="50%" [value]="compmModel.busiBkindNm"></ExtTextfield>
+                    </ExtFieldset>
+
+                    <ExtFieldset layout="hbox">
+                        <ExtTextfield label="사업자번호" [disabled]="this.compmFormDisable" width="50%" [value]="compmModel.busiNo"></ExtTextfield>
+
+                        <ExtTextfield label="법인번호" [disabled]="this.compmFormDisable" width="50%" [value]="compmModel.cbodyRegNo"></ExtTextfield>
+                    </ExtFieldset>
+
+                    <ExtFieldset layout="hbox">
+                        <ExtCombobox label="{{ '업체구분' | translate }}" 
+                            placeholder=""
+                            width="50%"
+                            [disabled]="this.compmFormDisable"
+                            [editable]="true"
+                            [store]="this.buisnessType" 
+                            [valueField]="'comboId'"
+                            [displayField]="'comboNm'" 
+                            [queryMode]="'local'" 
+                            [clearable]="true"
+                            [textAlign]="'left'" 
+                            [forceSelection]="true"
+                            [value]="compmModel.custDiv"
+                        >
+                        </ExtCombobox>
+
+                        <ExtTextfield label="업종코드" [disabled]="this.compmFormDisable" width="50%" [value]="compmModel.cateCd"></ExtTextfield>
+                    </ExtFieldset>
+
+                    <ExtFieldset layout="hbox">
+                        <ExtTextfield label="총괄납부번호" [disabled]="this.compmFormDisable" width="50%" [value]="compmModel.totPayNo"></ExtTextfield>
+
+                        <ExtTextfield label="총괄사업장코드" [disabled]="this.compmFormDisable" width="50%" [value]="compmModel.totSiteCd"></ExtTextfield>
+                    </ExtFieldset>
+
+                    <ExtFieldset layout="hbox">
+                        <ExtTextfield label="개업일자" [disabled]="this.compmFormDisable" width="50%" [value]="compmModel.openYmd"></ExtTextfield>
+
+                        <ExtTextfield label="폐업일자" [disabled]="this.compmFormDisable" width="50%" [value]="compmModel.bcloseYmd"></ExtTextfield>
+                    </ExtFieldset>
+
+                    <ExtFieldset layout="hbox">
+                        <ExtCombobox label="{{ '세무관리유형' | translate }}" 
+                            placeholder=""
+                            width="50%"
+                            [disabled]="this.compmFormDisable"
+                            [editable]="true"
+                            [store]="this.buisnessType" 
+                            [valueField]="'comboId'"
+                            [displayField]="'comboNm'" 
+                            [queryMode]="'local'" 
+                            [clearable]="true"
+                            [textAlign]="'left'" 
+                            [forceSelection]="true"
+                            [value]="compmModel.taxCntlType"
+                        >
+                        </ExtCombobox>
+
+                        <ExtCombobox label="{{ '원가대체여부' | translate }}" 
+                            placeholder=""
+                            width="50%"
+                            [disabled]="this.compmFormDisable"
+                            [editable]="true"
+                            [store]="this.buisnessType" 
+                            [valueField]="'comboId'"
+                            [displayField]="'comboNm'" 
+                            [queryMode]="'local'" 
+                            [clearable]="true"
+                            [textAlign]="'left'" 
+                            [forceSelection]="true"
+                            [value]="compmModel.primeRepmYn"
+                        >
+                        </ExtCombobox>
+                    </ExtFieldset>
+
+                    <ExtFieldset>
+                        <ExtTextfield label="대표전화번호" [disabled]="this.compmFormDisable" [value]="compmModel.reprTelNo"></ExtTextfield>
+                    </ExtFieldset>
+
+                    <ExtFieldset>
+                        <ExtTextfield label="비고" [disabled]="this.compmFormDisable" [value]="compmModel.remk"></ExtTextfield>
+                    </ExtFieldset>
+                </ExtFormpanel>
+
+            </ExtPanel>
+        </ExtPanel>
+
+        <ExtPanel [flex]="1.5" [border]="true" [layout]="{type: 'hbox', align: 'stretch'}">
+            <ExtPanel [flex]="1" [border]="true">
+                <div #extitem style="width: 100%; height: 100%;">
+                    <ag-grid-angular 
+                        #agGrid 
+                        style="width: 100%; height: 100%;" class="ag-theme-balham" 
+                        [rowData]="compdGridConfig.rowData"
+                        [defaultColDef]="compdGridConfig.defaultColDef" 
+                        [columnDefs]="compdGridConfig.columnDefs"
+                        [enableCellChangeFlash]="true" 
+                        [rowDragManaged]="true" 
+                        [animateRows]="true"
+                        [undoRedoCellEditing]="compdGridConfig.isUndo"
+                        [undoRedoCellEditingLimit]="compdGridConfig.undoLimit"
+                        [suppressRowClickSelection]="compdGridConfig.gridClickOption" 
+                        [groupSelectsChildren]="true" 
+                        rowSelection="multiple"
+                        (gridReady)="compdGridConfig.onReadyGrid($event)"
+                        (cellValueChanged)="compdGridConfig.onCellValueChanged($event)"
+                    >
+                    </ag-grid-angular>
+                </div>
+            </ExtPanel>
+
+            <ExtPanel [flex]="1" [border]="true" [layout]="{type: 'vbox', align: 'stretch'}">
+
+                <ExtFormpanel [flex]="1" padding="0" layout="vbox" [bodyStyle]="{'background': '#ffffff'}">
+
+                    <ExtPanel [flex]="1.5" [border]="true" [bodyStyle]="{'background': '#ffffff'}" [scrollable]="true">
+                        <ExtFieldset>
+                            <ExtTextfield label="회계 기" [disabled]="this.compdFormDisable"></ExtTextfield>
+                        </ExtFieldset>
+    
+                        <ExtFieldset>
+                            <ExtTextfield label="회계연도" [disabled]="this.compdFormDisable"></ExtTextfield>
+                        </ExtFieldset>
+    
+                        <ExtFieldset>
+                            <ExtTextfield label="대표자명" [disabled]="this.compdFormDisable"></ExtTextfield>
+                        </ExtFieldset>
+    
+                        <ExtFieldset layout="hbox">
+                            <ExtTextfield label="우편번호" [disabled]="this.compdFormDisable" width="60%"></ExtTextfield>
+                            <ExtButton iconCls="x-fa fa-search"></ExtButton>
+                        </ExtFieldset>
+    
+                        <ExtFieldset>
+                            <ExtTextfield label="주소" [disabled]="this.compdFormDisable"></ExtTextfield>
+                        </ExtFieldset>
+    
+                        <ExtFieldset layout="hbox">
+                            <ExtTextfield label="담당자코드" [disabled]="this.compdFormDisable" width="40%"></ExtTextfield>
+                            <ExtButton iconCls="x-fa fa-search" style="margin-right: 20px;"></ExtButton>
+
+                            <ExtTextfield label="담당자연락처" [disabled]="this.compdFormDisable" width="50%"></ExtTextfield>
+                        </ExtFieldset>
+    
+                        <ExtFieldset>
+                            <ExtTextfield label="홈텍스ID" [disabled]="this.compdFormDisable"></ExtTextfield>
+                        </ExtFieldset>
+    
+                        <ExtFieldset>
+                            <ExtTextfield label="홈페이지" [disabled]="this.compdFormDisable"></ExtTextfield>
+                        </ExtFieldset>
+    
+                        <ExtFieldset layout="hbox">
+                            <ExtTextfield label="계정그룹번호" [disabled]="this.compdFormDisable" width="50%"></ExtTextfield>
+
+                            <ExtTextfield label="예산계정단계" [disabled]="this.compdFormDisable" width="50%"></ExtTextfield>
+                        </ExtFieldset>
+                    </ExtPanel>
+
+                    <ExtPanel [flex]="0.5" [border]="true" [bodyStyle]="{'background': '#ffffff'}" [scrollable]="true">
+                        <ExtFieldset layout="hbox">
+                            <ExtLabel html="전자세금계산서"></ExtLabel>
+                        </ExtFieldset>
+
+                        <ExtFieldset layout="hbox">
+                            <ExtTextfield label="담당자코드" [disabled]="this.compdFormDisable" width="40%"></ExtTextfield>
+                            <ExtButton iconCls="x-fa fa-search" style="margin-right: 20px;"></ExtButton>
+
+                            <ExtTextfield label="담당자연락처" [disabled]="this.compdFormDisable" width="50%"></ExtTextfield>
+                        </ExtFieldset>
+
+                        <ExtFieldset>
+                            <ExtTextfield label="담당자메일" [disabled]="this.compdFormDisable"></ExtTextfield>
+                        </ExtFieldset>
+                    </ExtPanel>
+
+                    <ExtPanel [flex]="0.3" [border]="true" [bodyStyle]="{'background': '#ffffff'}">
+                        <ExtFieldset>
+                            <ExtTextfield label="비고" [disabled]="this.compdFormDisable"></ExtTextfield>
+                        </ExtFieldset>
+                    </ExtPanel>
+
+                </ExtFormpanel>
+            </ExtPanel>
+        </ExtPanel>
+    </ExtPanel>
+</ExtContainer>

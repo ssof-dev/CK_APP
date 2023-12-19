@@ -1,0 +1,105 @@
+#ssof-agGrid {
+    flex: 1 1 0px;
+    width: 100%;
+}
+
+.ag-row-u{
+    background-color: aquamarine !important;
+}
+
+.ag-row-c{
+    background-color: bisque !important;
+}
+
+.ag-row-d{
+    background-color: coral !important;
+}
+
+.ag-row-clear{
+    background-color: rgba(255, 255, 255) !important;
+}
+
+.total-col {
+    font-weight: bold;
+    color: rgba(13, 99, 212, 0.61);
+}
+.ag-cal-center{
+    text-align: center;
+}
+
+.ag-cal-left{
+    text-align: left;
+}
+
+.ag-cal-right{
+    text-align: right;
+}
+
+::-webkit-scrollbar {
+    width: 8px;  
+    height: 8px; 
+}
+::-webkit-scrollbar-track {
+    border-radius: 8px;
+    background-color: #ffffff;
+}
+::-webkit-scrollbar-track-piece {
+    background-color: #ffffff;
+}
+::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    background-color: #CFCFCF;
+}
+::-webkit-scrollbar-button {
+    background-color: darkblue;
+    width: 0px;
+    height: 0px;
+}
+::-webkit-scrollbar-button:start {
+    background-color: #CFCFCF; 
+}
+::-webkit-scrollbar-button:end {
+    background-color: #CFCFCF; 
+}
+::-webkit-scrollbar-corner {
+    background-color: #CFCFCF; 
+}
+::-webkit-resizer {
+    background-color: green;
+}
+
+.fc-sun {color:#FF0000}
+   .fc-sat {color:#0000FF}
+.fc-event .fc-content {
+    font-size: 0.8rem !important;
+    font-weight: bold;
+}
+
+input:read-only, textarea:read-only{
+    background-color: #f9f9f9 !important;
+    color:#2a3a40 !important;
+}
+
+.title-toolbar{
+    background-color: #eeeeee;
+}
+
+.grid-layout-title{
+    background: #0175c4;
+    font-size: x-small;
+    font-weight: 100;
+}
+
+.ag-header-cell-label {
+    justify-content: center;
+}
+
+/* input:read-write{
+    font-size: 1.0rem !important;
+    font-weight: 100;
+}
+
+input:defined{
+    font-size: 1.0rem !important;
+    font-weight: 100;
+} */

@@ -1,0 +1,48 @@
+<div class="calendar shadow bg-white p-5">
+    <!-- <div class="d-flex align-items-center">
+        <i class="fa fa-calendar fa-3x mr-3"></i>
+        <h2 class="month font-weight-bold mb-0 text-uppercase">달력</h2>
+    </div>
+    <p class="font-italic text-muted mb-5">달력</p> -->
+    <ol class="day-names list-unstyled" style="margin-bottom: -1rem;">
+        <li class="font-weight-bold text-uppercase sun">Sun</li>
+        <li class="font-weight-bold text-uppercase nor">Mon</li>
+        <li class="font-weight-bold text-uppercase nor">Tue</li>
+        <li class="font-weight-bold text-uppercase nor">Wed</li>
+        <li class="font-weight-bold text-uppercase nor">Thu</li>
+        <li class="font-weight-bold text-uppercase nor">Fri</li>
+        <li class="font-weight-bold text-uppercase sat">Sat</li>
+    </ol>
+
+    <!-- 해당월의 일수만큼 for문 -->
+    <ol class="days list-unstyled" >
+
+        <ng-container *ngFor="let item of arrayDay; let i = index">
+            <!-- 1일의 시작 위치 찾기 -->
+            <ng-container *ngIf="item.day == 1 else other">
+                <ng-container *ngFor="let oneDay of this.getArrayNum(item.week + 1); let j = index">
+                    <ng-container *ngIf="j == item.week else empty">
+                        <li [class]="dayClass(item)">
+                            <div class="date">{{item.day}}</div>
+                            <div class="event bg-green">매출액: 99,999,9999</div>
+                            <div class="event bg-red">이익액: 99,999,9999</div>
+                            <div class="event bg-blue">달성률: 99.99</div>
+                        </li>
+                    </ng-container>
+                    <ng-template #empty>
+                        <li class="outside">
+                            <div class="date">
+                                
+                            </div>
+                        </li>
+                    </ng-template>
+                </ng-container>
+            </ng-container>
+            <ng-template #other>
+                 <li [class]="dayClass(item)">
+                    <div class="date">{{item.day}}</div>
+                </li>
+            </ng-template>
+        </ng-container>
+    </ol>
+</div>
