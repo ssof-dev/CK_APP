@@ -1,29 +1,22 @@
 <ExtContainer padding="0" layout="fit" fitToParent="true" (ready)="this.comFun.keyMap($event,this)">
 
-    <ExtToolbar [docked]="'top'" [shadow]="false" [layout]="{ type: 'hbox', pack: 'right' }" class="title-toolbar"
-        style="background-color: white;"
-    >
-        <ExtButton [disabled]="this.btnDisable.newBtn" [align]="'right'" [ui]="'round'" iconCls="x-fa fa-edit"
-            text="{{ '신규' | translate }}" tooltip="F5">
-        </ExtButton>
-
-        <ExtButton [disabled]="this.btnDisable.modifyBtn" [align]="'right'" [ui]="'round'" iconCls="x-fa fa-eraser"
-            (tap)="editBtn_first()" text="{{ '수정' | translate }}" tooltip="F3">
-        </ExtButton>
-
-        <ExtButton [disabled]="this.btnDisable.deleteBtn" [align]="'right'" [ui]="'round'" iconCls="x-fa fa-trash-alt"
-            text="{{ '삭제' | translate }}" tooltip="F4">
-        </ExtButton>
-
-        <ExtButton [disabled]="this.btnDisable.saveBtn" [align]="'right'" [ui]="'round'" iconCls="x-fa fa-save"
-            text="{{ '저장' | translate }}" tooltip="F2">
-        </ExtButton>
-
-        <ExtButton [disabled]="this.btnDisable.cancelBtn" [align]="'right'" [ui]="'round'" iconCls="x-fa fa-times"
-            text="{{ '취소' | translate }}" tooltip="F12">
-        </ExtButton>
-    </ExtToolbar>
-
+    <!--공통버튼-->
+    <AuthButton
+        #authButton
+        [route]= "route"
+        ([authButtonDisabled])="authButtonDisabled"
+        (onTapQuery)="onTapQuery()"
+        (onTapNew)="onTapNew()"
+        (onTapEdit)="onTapEdit()"
+        (onTapSave)="onTapSave()"
+        (onTapDelete)="onTapDelete()"
+        (onTapRequest)="onTapRequest()"
+        (onTapApproval)="onTapApproval()"
+        (onTapDenied)="onTapDenied()"
+        (onExportExcel)="onExportExcel()"
+        (onExportPdf)="onExportPdf()"
+        (onTapCancel)="onTapCancel()"
+    ></AuthButton>
     <ExtPanel [shadow]="true" [layout]="{type: 'vbox', align: 'stretch'}" style="background-color: white;">
         
         <ExtPanel [flex]="1" [border]="true" [layout]="{type: 'hbox', align: 'stretch'}">
@@ -54,11 +47,11 @@
 
                 <ExtFormpanel [data]="compmModel" [flex]="1" padding="0" layout="vbox" [bodyStyle]="{'background': '#ffffff'}">
                     <ExtFieldset>
-                        <ExtTextfield label="사업업체번호" [disabled]="this.compmFormDisable" [value]="compmModel.useCompNo"></ExtTextfield>
+                        <ExtTextfield label="사업업체번호" [disabled]="this.compmFormDisable" [value]="compmModel.useCompNo" width="40%"></ExtTextfield>
                     </ExtFieldset>
                     
                     <ExtFieldset>
-                        <ExtTextfield label="사업업체명칭" [disabled]="this.compmFormDisable" [value]="compmModel.useCompNm"></ExtTextfield>
+                        <ExtTextfield label="사업업체명칭" [disabled]="this.compmFormDisable" [value]="compmModel.useCompNm" width="40%"></ExtTextfield>
                     </ExtFieldset>
 
                     <ExtFieldset layout="hbox">
@@ -140,7 +133,7 @@
                     </ExtFieldset>
 
                     <ExtFieldset>
-                        <ExtTextfield label="대표전화번호" [disabled]="this.compmFormDisable" [value]="compmModel.reprTelNo"></ExtTextfield>
+                        <ExtTextfield label="대표전화번호" [disabled]="this.compmFormDisable" [value]="compmModel.reprTelNo"width="40%"></ExtTextfield>
                     </ExtFieldset>
 
                     <ExtFieldset>
@@ -170,6 +163,7 @@
                         rowSelection="multiple"
                         (gridReady)="compdGridConfig.onReadyGrid($event)"
                         (cellValueChanged)="compdGridConfig.onCellValueChanged($event)"
+                        (selectionChanged)="compdGridSelection($event)"
                     >
                     </ag-grid-angular>
                 </div>
@@ -181,24 +175,24 @@
 
                     <ExtPanel [flex]="1.5" [border]="true" [bodyStyle]="{'background': '#ffffff'}" [scrollable]="true">
                         <ExtFieldset>
-                            <ExtTextfield label="회계 기" [disabled]="this.compdFormDisable"></ExtTextfield>
+                            <ExtTextfield label="회계 기" [disabled]="this.compdFormDisable" [value]="compdModel.useCompKi" width="30%"></ExtTextfield>
                         </ExtFieldset>
     
                         <ExtFieldset>
-                            <ExtTextfield label="회계연도" [disabled]="this.compdFormDisable"></ExtTextfield>
+                            <ExtTextfield label="회계연도" [disabled]="this.compdFormDisable" [value]="compdModel.useCompNo" width="30%"></ExtTextfield>
                         </ExtFieldset>
     
                         <ExtFieldset>
-                            <ExtTextfield label="대표자명" [disabled]="this.compdFormDisable"></ExtTextfield>
+                            <ExtTextfield label="대표자명" [disabled]="this.compdFormDisable" [value]="compdModel.ceoNm" width="30%"></ExtTextfield>
                         </ExtFieldset>
     
                         <ExtFieldset layout="hbox">
-                            <ExtTextfield label="우편번호" [disabled]="this.compdFormDisable" width="60%"></ExtTextfield>
+                            <ExtTextfield label="우편번호" [disabled]="this.compdFormDisable" [value]="compdModel.zipNo" width="60%"></ExtTextfield>
                             <ExtButton iconCls="x-fa fa-search"></ExtButton>
                         </ExtFieldset>
     
                         <ExtFieldset>
-                            <ExtTextfield label="주소" [disabled]="this.compdFormDisable"></ExtTextfield>
+                            <ExtTextfield label="주소" [disabled]="this.compdFormDisable" [value]="(compdModel.compAddr || '') + (compdModel.compdAddrDesc || '')"></ExtTextfield>
                         </ExtFieldset>
     
                         <ExtFieldset layout="hbox">
@@ -209,17 +203,17 @@
                         </ExtFieldset>
     
                         <ExtFieldset>
-                            <ExtTextfield label="홈텍스ID" [disabled]="this.compdFormDisable"></ExtTextfield>
+                            <ExtTextfield label="홈텍스ID" [disabled]="this.compdFormDisable"  [value]="compdModel.homeTaxId" width="40%"></ExtTextfield>
                         </ExtFieldset>
     
                         <ExtFieldset>
-                            <ExtTextfield label="홈페이지" [disabled]="this.compdFormDisable"></ExtTextfield>
+                            <ExtTextfield label="홈페이지" [disabled]="this.compdFormDisable" [value]="compdModel.homePage" width="50%"></ExtTextfield>
                         </ExtFieldset>
     
                         <ExtFieldset layout="hbox">
-                            <ExtTextfield label="계정그룹번호" [disabled]="this.compdFormDisable" width="50%"></ExtTextfield>
+                            <ExtTextfield label="계정그룹번호" [disabled]="this.compdFormDisable" width="50%" [value]="compdModel.accGroupNo"></ExtTextfield>
 
-                            <ExtTextfield label="예산계정단계" [disabled]="this.compdFormDisable" width="50%"></ExtTextfield>
+                            <ExtTextfield label="예산계정단계" [disabled]="this.compdFormDisable" width="50%" [value]="compdModel.budAccStep"></ExtTextfield>
                         </ExtFieldset>
                     </ExtPanel>
 
@@ -229,20 +223,20 @@
                         </ExtFieldset>
 
                         <ExtFieldset layout="hbox">
-                            <ExtTextfield label="담당자코드" [disabled]="this.compdFormDisable" width="40%"></ExtTextfield>
+                            <ExtTextfield label="담당자코드" [disabled]="this.compdFormDisable" [value]="compdModel.reprPersonCd" width="40%"></ExtTextfield>
                             <ExtButton iconCls="x-fa fa-search" style="margin-right: 20px;"></ExtButton>
 
-                            <ExtTextfield label="담당자연락처" [disabled]="this.compdFormDisable" width="50%"></ExtTextfield>
+                            <ExtTextfield label="담당자연락처" [disabled]="this.compdFormDisable" [value]="compdModel.eTaxBillPersonTelNo" width="50%"></ExtTextfield>
                         </ExtFieldset>
 
                         <ExtFieldset>
-                            <ExtTextfield label="담당자메일" [disabled]="this.compdFormDisable"></ExtTextfield>
+                            <ExtTextfield label="담당자메일" [disabled]="this.compdFormDisable" [value]="compdModel.eTaxBillPersonEmail"></ExtTextfield>
                         </ExtFieldset>
                     </ExtPanel>
 
-                    <ExtPanel [flex]="0.3" [border]="true" [bodyStyle]="{'background': '#ffffff'}">
+                    <ExtPanel [flex]="0.5" [border]="true" [bodyStyle]="{'background': '#ffffff'}">
                         <ExtFieldset>
-                            <ExtTextfield label="비고" [disabled]="this.compdFormDisable"></ExtTextfield>
+                            <ExtTextfield label="비고" [disabled]="this.compdFormDisable" [value]="compdModel.remk"></ExtTextfield>
                         </ExtFieldset>
                     </ExtPanel>
 

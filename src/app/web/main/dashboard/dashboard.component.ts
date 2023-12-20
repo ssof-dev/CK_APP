@@ -24,7 +24,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     private comAlert: ComAlert = new ComAlert();
 
     //조회 model 선언
-    searchFormModel: DashboardModel = new DashboardModel();
+    searchModel: DashboardModel = new DashboardModel();
 
     //게시판 그리드
     noticeGridConfig: AgGridConfig = new AgGridConfig();
@@ -34,6 +34,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     dataGridConfig: AgGridConfig = new AgGridConfig();
     dataGridColums!: DataGridColums;
 
+    //검색 단어
+    noticeSearchWord: any;
+    dataSearchWord: any;
     
     constructor(public envService: EnvService,
         public comFun: ComFunction, 
@@ -55,7 +58,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     noticeGridList(selectKey?:any){
         this.noticeGridConfig.clear();
 
-        this.service.noticeGridList(this.searchFormModel).subscribe({
+        this.service.noticeGridList(this.searchModel).subscribe({
             next:(response: any) =>{
 
                 if(response.stateCd === 'OK' || response.stateCd === 'NO_DATA'){
@@ -74,7 +77,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     dataGridList(selectKey?:any){
         this.dataGridConfig.clear();
 
-        this.service.dataGridList(this.searchFormModel).subscribe({
+        this.service.dataGridList(this.searchModel).subscribe({
             next:(response: any) =>{
 
                 if(response.stateCd === 'OK' || response.stateCd === 'NO_DATA'){
@@ -89,6 +92,52 @@ export class DashboardComponent implements OnInit, AfterViewInit {
             }
         })
 
+    }
+
+    //공지사항 검색
+    noticeSearch(){
+
+        //공지사항 검색 단어 저장
+        this.searchModel.brdTitle = this.noticeSearchWord;
+
+        //검색
+        this.noticeGridList();
+    }
+
+    //자료실 검색
+    dataSearch(){
+        
+        //자료실 검색 단어 저장
+        this.searchModel.brdTitle = this.dataSearchWord;
+
+        //검색
+        this.dataGridList();
+    }
+
+    //공지사항 새로고침
+    refreshNotice(){
+        
+        //공지사항 검색 초기화
+        this.noticeSearchWord = '';
+
+        //검색모델 초기화
+        this.searchModel = new DashboardModel();
+
+        //조회
+        this.noticeGridList();
+    }
+
+    //자료실 새로고침
+    refreshData(){
+
+        //자료실 검색 초기화
+        this.dataSearchWord = '';
+
+        //검색모델 초기화
+        this.searchModel = new DashboardModel();
+
+        //조회
+        this.dataGridList();
     }
 }
 

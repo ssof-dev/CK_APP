@@ -15,7 +15,6 @@ export class DataGridColums {
     public columnDefs = [
         {
             headerName: 'NO',
-            field: 'brdNo',
             type: 'numericColumn',
             sortable: true,
             width: 65,

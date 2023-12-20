@@ -25,9 +25,10 @@
 </ExtContainer> -->
 <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1"/>
 
-<ExtPanel>
+<!-- img를 뺴면 그리드가 올라가서 임시로 ExtPanel에 너비, 높이를 줌 -->
+<ExtPanel style="width: 100%; height: 350px;">
     <!-- 메인화면 every erp 이미지 -->
-    <img #extitem width="100%" height="400px" src="assets/images/dashboard.png" alt="Image">
+    <!-- <img #extitem width="100%" height="400px" src="assets/images/dashboard.png" alt="Image"> -->
 </ExtPanel>
 <ExtContainer  
     [autoSize]="true"
@@ -57,6 +58,7 @@
                 [align]="'right'"
                 [ui]="'alt round'"
                 iconCls="x-fa fa-refresh"
+                (tap)="refreshNotice()"
             >                                                
             </ExtButton>
         </ExtTitlebar>
@@ -64,29 +66,32 @@
         <ExtPanel [weight]="10" docked="left" [flex]="1" width="100%" [maxWidth]="'100%'"
             [resizable]="{edges: 'east', dynamic: true}" [border]="true">
             <ExtContainer layout="fit" fitToParent="true">
-                <div #extitem style="width: 100%; height: 100%;">
+                <div #extitem style="width: 100%; height: 100%; display: flex; flex-direction: column;">
+                    <div>
                         <input type="text" placeholder="검색어"
                             style="width: 100%; padding: 10px 20px; border: 2px #42a5f5 solid; font-size: 100%;"
+                            [(ngModel)]="noticeSearchWord" (keyup)="noticeSearch()"
                         >
+                    </div>
 
-                        <ag-grid-angular 
-                            #agGrid 
-                            style="width: 100%; height: 100%;" class="ag-theme-balham" 
-                            [rowData]="noticeGridConfig.rowData"
-                            [defaultColDef]="noticeGridConfig.defaultColDef" 
-                            [columnDefs]="noticeGridConfig.columnDefs"
-                            [enableCellChangeFlash]="true" 
-                            [rowDragManaged]="true" 
-                            [animateRows]="true"
-                            [undoRedoCellEditing]="noticeGridConfig.isUndo"
-                            [undoRedoCellEditingLimit]="noticeGridConfig.undoLimit"
-                            [suppressRowClickSelection]="noticeGridConfig.gridClickOption" 
-                            [groupSelectsChildren]="true" 
-                            rowSelection="multiple"
-                            (gridReady)="noticeGridConfig.onReadyGrid($event)"
-                            (cellValueChanged)="noticeGridConfig.onCellValueChanged($event)"
-                        >
-                        </ag-grid-angular>
+                    <ag-grid-angular 
+                        #agGrid 
+                        style="width: 100%; height: 100%;" class="ag-theme-balham" 
+                        [rowData]="noticeGridConfig.rowData"
+                        [defaultColDef]="noticeGridConfig.defaultColDef" 
+                        [columnDefs]="noticeGridConfig.columnDefs"
+                        [enableCellChangeFlash]="true" 
+                        [rowDragManaged]="true" 
+                        [animateRows]="true"
+                        [undoRedoCellEditing]="noticeGridConfig.isUndo"
+                        [undoRedoCellEditingLimit]="noticeGridConfig.undoLimit"
+                        [suppressRowClickSelection]="noticeGridConfig.gridClickOption" 
+                        [groupSelectsChildren]="true" 
+                        rowSelection="multiple"
+                        (gridReady)="noticeGridConfig.onReadyGrid($event)"
+                        (cellValueChanged)="noticeGridConfig.onCellValueChanged($event)"
+                    >
+                    </ag-grid-angular>
                 </div>
             </ExtContainer>
         </ExtPanel>
@@ -105,6 +110,7 @@
                 [align]="'right'"
                 [ui]="'alt round'"
                 iconCls="x-fa fa-refresh"
+                (tap)="refreshData()"
             >                                                
             </ExtButton>
         </ExtTitlebar>
@@ -112,10 +118,13 @@
         <ExtPanel [weight]="10" docked="left" [flex]="1" width="100%" [maxWidth]="'100%'"
             [resizable]="{edges: 'east', dynamic: true}" [border]="true">
             <ExtContainer layout="fit" fitToParent="true">
-                <div #extitem style="width: 100%; height: 100%;">
-                    <input type="text" placeholder="검색어"
-                        style="width: 100%; padding: 10px 20px; border: 2px orange solid; font-size: 100%;"
-                    >
+                <div #extitem style="width: 100%; height: 100%; display: flex; flex-direction: column;">
+                    <div>
+                        <input type="text" placeholder="검색어"
+                            style="width: 100%; padding: 10px 20px; border: 2px orange solid; font-size: 100%;"
+                            [(ngModel)]="dataSearchWord" (keyup)="dataSearch()"
+                        >
+                    </div>
 
                     <ag-grid-angular 
                         #agGrid 

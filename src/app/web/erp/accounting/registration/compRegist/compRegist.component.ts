@@ -11,6 +11,7 @@ import { AgGridConfig } from 'src/app/shared/ag-Grid-Config';
 import { ComAlert } from 'src/app/shared/com.alert';
 import { CompdGridColums } from './gridColums/compdGrid-Colums';
 import { CompmGridColums } from './gridColums/compmGrid-Colums';
+import { AuthButton, AuthButtonDisabledModel } from 'src/app/shared/AuthButton';
 
 @Component({
     templateUrl: 'compRegist.component.html',
@@ -19,10 +20,15 @@ import { CompmGridColums } from './gridColums/compmGrid-Colums';
 })
 export class CompRegistComponent implements OnInit, AfterViewInit{
 
+    @Input() public route: any;
+
     private comAlert: ComAlert = new ComAlert();
 
     //조회 model 선언
     searchFormModel: CompRegistModel = new CompRegistModel();
+
+    //공용버튼 제어
+    authButtonDisabled!: AuthButtonDisabledModel;
 
     //공통코드
 	public codeModel : any;
@@ -135,7 +141,7 @@ export class CompRegistComponent implements OnInit, AfterViewInit{
 
         if(param.length === 1){
 
-            //데이터를 폼에 전달
+            //데이터를 모델에 저장
             this.compmModel = JSON.parse(JSON.stringify(param[0]));
 
             this.apiSelectionCompdList(param[0]);
@@ -162,13 +168,63 @@ export class CompRegistComponent implements OnInit, AfterViewInit{
         })
     }
 
-    editBtn_first(){
-        this.compmFormDisable =false;
+    compdGridSelection(e: any){
+
+        //업체 상세정보 그리드에서 현재 선태고딘 행에 대한 데이터를 가져오기
+        let param = this.compdGridConfig.gridApi.getSelectedRows();
+
+        if(param.length === 1){
+
+            //업체상세 모델에 데이터를 저장
+            this.compdModel = JSON.parse(JSON.stringify(param[0]));
+        }
     }
 
-    editBtn_second(){
-        this.compdFormDisable =false;
+    //조회 버튼 이벤트
+    onTapQuery(){
+
     }
 
+    //신규 버튼 이벤트
+    onTapNew(){
+    }
+
+    //수정버튼 이벤트
+    onTapEdit(){
+    }
+
+    //저장 버튼 이벤트
+    onTapSave(){
+    }
+
+    //삭제 버튼 이벤트
+    onTapDelete(){
+       
+    }
+
+    //승인요청 버튼 이벤트
+    onTapRequest(){
+    }
+
+    //승인버튼 이벤트
+    onTapApproval(){
+    }
+
+    //반려버튼 이벤트
+    onTapDenied(){
+    }
+
+    //엑셀 버튼 이벤트
+   onExportExcel(){
+   }
+
+    //PDF 버튼 이벤트
+   onExportPdf(){
+
+   }
+
+    //취소버튼 이벤트
+    onTapCancel(){
+    }
     
 }

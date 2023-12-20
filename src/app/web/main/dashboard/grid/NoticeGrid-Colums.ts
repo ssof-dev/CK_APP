@@ -14,7 +14,6 @@ export class NoticeGridColums {
     public columnDefs = [
         {
             headerName: 'No',
-            field: 'brdNo',
             type: 'numericColumn',
             sortable: true,
             width: 65,
