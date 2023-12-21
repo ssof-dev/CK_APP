@@ -19,7 +19,7 @@ export class CompdGridColums{
         },
         {
             headerName: '회계연도',
-            field: 'useCompNo',
+            field: 'frYmd',
             width: 250,
             cellStyle: {textAlign: "center"}
         },

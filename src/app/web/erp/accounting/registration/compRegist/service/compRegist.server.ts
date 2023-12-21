@@ -24,6 +24,38 @@ export class CompRegistModel{
     regDt!: string;         //등록일시
     modUser!: string;       //수정사용자
     modDt!: string;         //수정일시
+    rowType!: string;       //모델상태
+
+    pageSize: number = 50;
+    offset: number = 0;
+}
+
+export class CompdModel{
+    useCompNo!: string;				//사용업체번호
+	useCompKi!: string;				//회계년도의 기
+	frYmd!: string;					//1년단위의 사업시작일자
+	toYmd!: string;					//1년단위의 사업마감일자
+	ceoNm!: string;					//대표자명
+	zipNo!: string;					//우편번호
+	compAddr!: string;				//도로명 주소
+	compAddrDesc!: string;			//상세주소
+	reprPersonCd!: string;			//대표담당자코드
+	perpPersonTelNo!: string;		//
+	homeTaxId!: string;				//홈텍스ID
+	eTaxBillId!: string;			//전자세금계산서ID
+	eTaxBillPersonCd!: string;		//
+	eTaxBillPersonTelNo!: string;	//
+	eTaxBillPersonEmail!: string;	//담당자메일
+	homePage!: string;				//홈페이지주소
+	accGroupNo!: string;			//회계년도에 사용하는 계정그룹번호
+	budAccStep!: string;			//예산의 단계
+	remk!: string;					//비고
+	useYn!: string;					//사용여부
+	regUser!: string;				//최초 등록한 사용자번호
+	regDt!: string;					//등록일시
+	modUser!: string;				//수정사용자
+	modDt!: string;					//수정일시
+    rowType!: string;               //모델상태
 
     pageSize: number = 50;
     offset: number = 0;
@@ -48,5 +80,14 @@ export class CompRegistService extends ApiHttpService{
      */
     selectCompdList(params : any): Observable<any>{
         return this.httpPost('/api/public/compRegist/selectCompdList', params);
+    }
+
+    /**
+     * 업체 정보 저장
+     * @param params 
+     * @returns 
+     */
+    saveCompInfo(params : any): Observable<any>{
+        return this.httpPost('/api/public/compRegist/saveCompInfo', params);
     }
 }

@@ -2,7 +2,7 @@ declare var Ext: any;
 import { Component, OnInit, Input, AfterViewInit, ViewChild } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { IndexComponent } from 'src/app/index/index.component';
-import { CompRegistModel, CompRegistService } from './service/compRegist.server';
+import { CompRegistModel, CompdModel, CompRegistService } from './service/compRegist.server';
 import { ComFunction } from 'src/app/shared/com.function';
 import { ComValidation } from 'src/app/shared/com.validation';
 import { EnvService } from 'src/app/shared/env.service';
@@ -38,10 +38,10 @@ export class CompRegistComponent implements OnInit, AfterViewInit{
     compmGridColums!: CompmGridColums;
 
     //사용업체 폼 모델
-    compmModel: any = [];
+    compmModel: CompRegistModel = new CompRegistModel();
 
     //업체상세 폼 모델
-    compdModel: any = [];
+    compdModel: CompdModel = new CompdModel();
 
     //사용업체 상세정보 그리드
     compdGridConfig: AgGridConfig = new AgGridConfig();
@@ -100,7 +100,8 @@ export class CompRegistComponent implements OnInit, AfterViewInit{
                 this.compmGridColums = new CompmGridColums(this.compmGridConfig, this);
                 this.compdGridColums = new CompdGridColums(this.compdGridConfig, this);
 
-
+                //공통버튼 활성화
+                this.authButton.gridClickBtnDisableControll();
             }
         })
     }
@@ -195,11 +196,6 @@ export class CompRegistComponent implements OnInit, AfterViewInit{
 
     //신규 버튼 이벤트
     onTapNew(){
-    }
-
-    //수정버튼 이벤트
-    onTapEdit(){
-
         //그리드 클릭 비활
         this.compmGridConfig.gridClickOption = true;
         this.compdGridConfig.gridClickOption = true;
@@ -208,22 +204,115 @@ export class CompRegistComponent implements OnInit, AfterViewInit{
         this.authButton.allKillBtnControll();
         this.authButton._authButtonDisabled.saveBtn = false;
 
-        //폼들의 데이터 유무를 확인
-        if(this.compmModel.useCompNo != null || this.compmModel.useCompNo != ''){
-            //폼 활성화
+        //회사코드의 선택된 행 데이터 가져오기
+        let param = this.compmGridConfig.gridApi.getSelectedRows();
+        
+        if(param.length === 1){//회계기 정보 추가시
+
+            //폼 초기화
+            this.compdModel = new CompdModel();
+
+            //회계기 정보 폼 활성화
+            this.compdFormDisable = false;
+
+            this.compmModel.rowType = '';
+            this.compdModel.rowType = 'insert';
+
+
+            
+        }else{//회사정보만 추가 or 회사정보, 회계기 정보 추가시
+
+            //폼 초기화
+            this.compmModel = new CompRegistModel();
+            this.compdModel = new CompdModel();
+
+            
+            //회사정보, 회계기정보 폼 활성화
             this.compmFormDisable = false;
+            this.compdFormDisable = false;
+
+            //모델 상태 추가
+            this.compmModel.rowType = 'insert';
+            this.compdModel.rowType = 'insert';
         }
 
-        if(this.compdModel.useCompKi != null || this.compdModel.useCompKi != ''){
+    }
+
+    //수정버튼 이벤트
+    onTapEdit(){
+
+        //저장 버튼 활성화
+        this.authButton.allKillBtnControll();
+        this.authButton._authButtonDisabled.saveBtn = false;
+
+        //그리드 선택 여부 체크
+        let compmCheck = this.compmGridConfig.gridApi.getSelectedRows();
+        let cmopdCheck = this.compdGridConfig.gridApi.getSelectedRows();
+
+        //폼들의 데이터 유무를 확인
+        if(compmCheck.length > 0){
+            //폼 활성화
+            this.compmFormDisable = false;
+            this.compmModel.rowType = 'update';
+
+            //그리드 클릭 비활
+            this.compmGridConfig.gridClickOption = true;
+        }
+
+        if(cmopdCheck.length > 0){
             //폼 활성화
             this.compdFormDisable = false;
+            this.compdModel.rowType = 'update';
+
+            //그리드 클릭 비활
+            this.compdGridConfig.gridClickOption = true;
         }
+
     }
 
     //저장 버튼 이벤트
     onTapSave(){
+        let param = {
+            header : this.compmModel
+        ,   detail: this.compdModel
+        }
+
+        console.log(param);
+        
+        this.service.saveCompInfo(param).subscribe({
+            next:(response: any) =>{
+
+                if(response.stateCd === 'OK'){
+                    //공용버튼 활성 제어
+                    this.authButton.gridClickBtnDisableControll();
+
+                    //그리드 클릭 활성화
+                    this.compmGridConfig.gridClickOption = false;
+                    this.compdGridConfig.gridClickOption = false;
+
+                    this.compmModel = new CompRegistModel();
+                    this.compdModel = new CompdModel();
+
+                    //폼 비활
+                    this.compmFormDisable = true;
+                    this.compdFormDisable = true;
+
+                    //선택 초기화
+                    this.compmGridConfig.gridApi.deselectAll();
+                    this.compdGridConfig.gridApi.deselectAll();
+
+                    //사업조회
+                    this.apiSelectListHeader();
+                }
+
+            },
+            error:(response: any) =>{
+                console.log("error발생")
+            }
+        })
     }
 
+    //바로 보내버리기
     //삭제 버튼 이벤트
     onTapDelete(){
        
@@ -259,6 +348,9 @@ export class CompRegistComponent implements OnInit, AfterViewInit{
         //그리드 클릭 활성화
         this.compmGridConfig.gridClickOption = false;
         this.compdGridConfig.gridClickOption = false;
+
+        this.compmModel = new CompRegistModel();
+        this.compdModel = new CompdModel();
 
         //폼 비활
         this.compmFormDisable = true;
