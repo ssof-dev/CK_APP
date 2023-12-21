@@ -141,7 +141,7 @@
                     >
                         <ExtTitle [title]="'공통코드'" [style]="{'font-size': '13px', 'margin-bottom': '13px'}"></ExtTitle>
                     </ExtTitlebar>
-                    <div #extitem style="width: 100%; height: 100%;">
+                    <div #extitem style="width: 100%; height: calc(100% - 45px);">
                         <ag-grid-angular 
                             #agGrid 
                             style="width: 100%; height: 100%;" class="ag-theme-balham" 
@@ -168,7 +168,7 @@
             </ExtPanel>
 
             <!--Detail -->
-            <ExtPanel [flex]="1" layout="fit" [border]="true" [maxWidth]="1200" [minWidth]="200" width="800px" docked="right" [resizable]="{edges: 'west', dynamic: true}">
+            <ExtPanel [flex]="1" layout="fit" [border]="true" >
                 <ExtContainer layout="fit" fitToParent="true" [flex]="1">
                     <ExtTitlebar 
                             docked="top" 
@@ -181,7 +181,7 @@
                         <ExtTitle [title]="'상세코드'" [style]="{'font-size': '13px', 'margin-bottom': '13px'}"></ExtTitle>
                     </ExtTitlebar>
 
-                    <div #extitem style="width: 100%; height: 100%;">
+                    <div #extitem style="width: 100%; height: calc(100% - 45px);">
                         <ag-grid-angular 
                             #agGrid 
                             style="width: 100%; height: 100%;" class="ag-theme-balham" 

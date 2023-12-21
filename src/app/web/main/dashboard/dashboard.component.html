@@ -25,128 +25,137 @@
 </ExtContainer> -->
 <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1"/>
 
-<!-- img를 뺴면 그리드가 올라가서 임시로 ExtPanel에 너비, 높이를 줌 -->
-<ExtPanel style="width: 100%; height: 350px;">
-    <!-- 메인화면 every erp 이미지 -->
-    <!-- <img #extitem width="100%" height="400px" src="assets/images/dashboard.png" alt="Image"> -->
-</ExtPanel>
-<ExtContainer  
-    [autoSize]="true"
-    [defaults]="{
-        flex: 1, 
-        bodyPadding: 10, 
-        shadow: true, 
-        margin: 10
-    }"
-    [layout]="{
-        type: 'hbox', 
-        pack: 'center', 
-        align: 'stretch'
-    }"
-    [flex]="1"
->
-    <ExtPanel [flex]="1" [layout]="'box'" [border]="true" height="440px">
-        <ExtTitlebar
-            [title]="'공지사항'"
-            docked="top"
-            [style]='{ "background": "#0175c4" }'
-            [platformConfig]="{ 
-                desktop : { titleAlign: 'left' }
-            }"
-        >
-            <ExtButton 
-                [align]="'right'"
-                [ui]="'alt round'"
-                iconCls="x-fa fa-refresh"
-                (tap)="refreshNotice()"
-            >                                                
-            </ExtButton>
-        </ExtTitlebar>
+<ExtContainer padding="0" layout="fit" fitToParent="true" (ready)="comFun.keyMap($event,this)">
+    <ExtPanel [shadow]="true" [layout]="{ type: 'vbox', align: 'strech' }">
 
-        <ExtPanel [weight]="10" docked="left" [flex]="1" width="100%" [maxWidth]="'100%'"
-            [resizable]="{edges: 'east', dynamic: true}" [border]="true">
-            <ExtContainer layout="fit" fitToParent="true">
-                <div #extitem style="width: 100%; height: 100%; display: flex; flex-direction: column;">
-                    <div>
-                        <input type="text" placeholder="검색어"
-                            style="width: 100%; padding: 10px 20px; border: 2px #42a5f5 solid; font-size: 100%;"
-                            [(ngModel)]="noticeSearchWord" (keyup)="noticeSearch()"
-                        >
-                    </div>
+        <ExtPanel [flex]="1" [border]="true">
+            <!-- img를 뺴면 그리드가 올라가서 임시로 ExtPanel에 너비, 높이를 줌 -->
+            <ExtPanel style="width: 100%; height: 350px;">
+                <!-- 메인화면 every erp 이미지 -->
+                <!-- <img #extitem width="100%" height="400px" src="assets/images/dashboard.png" alt="Image"> -->
+            </ExtPanel>
+        </ExtPanel>
 
-                    <ag-grid-angular 
-                        #agGrid 
-                        style="width: 100%; height: 100%;" class="ag-theme-balham" 
-                        [rowData]="noticeGridConfig.rowData"
-                        [defaultColDef]="noticeGridConfig.defaultColDef" 
-                        [columnDefs]="noticeGridConfig.columnDefs"
-                        [enableCellChangeFlash]="true" 
-                        [rowDragManaged]="true" 
-                        [animateRows]="true"
-                        [undoRedoCellEditing]="noticeGridConfig.isUndo"
-                        [undoRedoCellEditingLimit]="noticeGridConfig.undoLimit"
-                        [suppressRowClickSelection]="noticeGridConfig.gridClickOption" 
-                        [groupSelectsChildren]="true" 
-                        rowSelection="multiple"
-                        (gridReady)="noticeGridConfig.onReadyGrid($event)"
-                        (cellValueChanged)="noticeGridConfig.onCellValueChanged($event)"
+        <ExtPanel [flex]="1" [border]="true" [layout]="{type: 'hbox', align: 'stretch'}">
+
+            <ExtContainer  
+                [autoSize]="true"
+                [defaults]="{
+                    flex: 1, 
+                    bodyPadding: 10,
+                    margin: 10
+                }"
+                [layout]="{
+                    type: 'hbox', 
+                    pack: 'center', 
+                    align: 'stretch'
+                }"
+                [flex]="1"
+            >
+                <ExtPanel [flex]="1" [layout]="'box'" height="calc(100% - 15PX)">
+                    <ExtTitlebar
+                        [title]="'공지사항'"
+                        docked="top"
+                        [style]='{ "background": "#0175c4" }'
+                        [platformConfig]="{ 
+                            desktop : { titleAlign: 'left' }
+                        }"
                     >
-                    </ag-grid-angular>
-                </div>
+                        <ExtButton 
+                            [align]="'right'"
+                            [ui]="'alt round'"
+                            iconCls="x-fa fa-refresh"
+                            (tap)="refreshNotice()"
+                        >                                                
+                        </ExtButton>
+                    </ExtTitlebar>
+
+                    <ExtPanel [weight]="10" docked="left" [flex]="1" width="100%" [border]="true">
+                        <ExtContainer layout="fit" fitToParent="true">
+                            <div #extitem style="width: 100%; height: 100%; display: flex; flex-direction: column;">
+                                <div>
+                                    <input type="text" placeholder="검색어"
+                                        style="width: 100%; padding: 10px 20px; border: 2px #42a5f5 solid; font-size: 100%;"
+                                        [(ngModel)]="noticeSearchWord" (keyup)="noticeSearch()"
+                                    >
+                                </div>
+
+                                <ag-grid-angular 
+                                    #agGrid 
+                                    style="width: 100%; height: 100%;" class="ag-theme-balham" 
+                                    [rowData]="noticeGridConfig.rowData"
+                                    [defaultColDef]="noticeGridConfig.defaultColDef" 
+                                    [columnDefs]="noticeGridConfig.columnDefs"
+                                    [enableCellChangeFlash]="true" 
+                                    [rowDragManaged]="true" 
+                                    [animateRows]="true"
+                                    [undoRedoCellEditing]="noticeGridConfig.isUndo"
+                                    [undoRedoCellEditingLimit]="noticeGridConfig.undoLimit"
+                                    [suppressRowClickSelection]="noticeGridConfig.gridClickOption" 
+                                    [groupSelectsChildren]="true" 
+                                    rowSelection="multiple"
+                                    (gridReady)="noticeGridConfig.onReadyGrid($event)"
+                                    (cellValueChanged)="noticeGridConfig.onCellValueChanged($event)"
+                                >
+                                </ag-grid-angular>
+                            </div>
+                        </ExtContainer>
+                    </ExtPanel>
+                </ExtPanel>
+                    
+                <ExtPanel [flex]="1" [layout]="'box'" height="calc(100% - 15PX)">
+                    <ExtTitlebar
+                        [title]="'자료실'"
+                        docked="top"
+                        [style]='{ "background": "#F07F04" }'
+                        [platformConfig]="{ 
+                            desktop : { titleAlign: 'left' }
+                        }"
+                    >
+                        <ExtButton 
+                            [align]="'right'"
+                            [ui]="'alt round'"
+                            iconCls="x-fa fa-refresh"
+                            (tap)="refreshData()"
+                        >                                                
+                        </ExtButton>
+                    </ExtTitlebar>
+
+                    <ExtPanel [weight]="10" docked="left" [flex]="1" width="100%" [border]="true">
+                        <ExtContainer layout="fit" fitToParent="true">
+                            <div #extitem style="width: 100%; height: 100%; display: flex; flex-direction: column;">
+                                <div>
+                                    <input type="text" placeholder="검색어"
+                                        style="width: 100%; padding: 10px 20px; border: 2px orange solid; font-size: 100%;"
+                                        [(ngModel)]="dataSearchWord" (keyup)="dataSearch()"
+                                    >
+                                </div>
+
+                                <ag-grid-angular 
+                                    #agGrid 
+                                    style="width: 100%; height: 100%;" class="ag-theme-balham" 
+                                    [rowData]="dataGridConfig.rowData"
+                                    [defaultColDef]="dataGridConfig.defaultColDef" 
+                                    [columnDefs]="dataGridConfig.columnDefs"
+                                    [enableCellChangeFlash]="true" 
+                                    [rowDragManaged]="true" 
+                                    [animateRows]="true"
+                                    [undoRedoCellEditing]="dataGridConfig.isUndo"
+                                    [undoRedoCellEditingLimit]="dataGridConfig.undoLimit"
+                                    [suppressRowClickSelection]="dataGridConfig.gridClickOption" 
+                                    [groupSelectsChildren]="true" 
+                                    rowSelection="multiple"
+                                    (gridReady)="dataGridConfig.onReadyGrid($event)"
+                                    (cellValueChanged)="dataGridConfig.onCellValueChanged($event)"
+                                >
+                                </ag-grid-angular>
+                            </div>
+                        </ExtContainer>
+                    </ExtPanel>
+                </ExtPanel>
+                
             </ExtContainer>
         </ExtPanel>
-    </ExtPanel>
-        
-    <ExtPanel [flex]="1" [layout]="'box'" [border]="true">
-        <ExtTitlebar
-            [title]="'자료실'"
-            docked="top"
-            [style]='{ "background": "#F07F04" }'
-            [platformConfig]="{ 
-                desktop : { titleAlign: 'left' }
-            }"
-        >
-            <ExtButton 
-                [align]="'right'"
-                [ui]="'alt round'"
-                iconCls="x-fa fa-refresh"
-                (tap)="refreshData()"
-            >                                                
-            </ExtButton>
-        </ExtTitlebar>
 
-        <ExtPanel [weight]="10" docked="left" [flex]="1" width="100%" [maxWidth]="'100%'"
-            [resizable]="{edges: 'east', dynamic: true}" [border]="true">
-            <ExtContainer layout="fit" fitToParent="true">
-                <div #extitem style="width: 100%; height: 100%; display: flex; flex-direction: column;">
-                    <div>
-                        <input type="text" placeholder="검색어"
-                            style="width: 100%; padding: 10px 20px; border: 2px orange solid; font-size: 100%;"
-                            [(ngModel)]="dataSearchWord" (keyup)="dataSearch()"
-                        >
-                    </div>
-
-                    <ag-grid-angular 
-                        #agGrid 
-                        style="width: 100%; height: 100%;" class="ag-theme-balham" 
-                        [rowData]="dataGridConfig.rowData"
-                        [defaultColDef]="dataGridConfig.defaultColDef" 
-                        [columnDefs]="dataGridConfig.columnDefs"
-                        [enableCellChangeFlash]="true" 
-                        [rowDragManaged]="true" 
-                        [animateRows]="true"
-                        [undoRedoCellEditing]="dataGridConfig.isUndo"
-                        [undoRedoCellEditingLimit]="dataGridConfig.undoLimit"
-                        [suppressRowClickSelection]="dataGridConfig.gridClickOption" 
-                        [groupSelectsChildren]="true" 
-                        rowSelection="multiple"
-                        (gridReady)="dataGridConfig.onReadyGrid($event)"
-                        (cellValueChanged)="dataGridConfig.onCellValueChanged($event)"
-                    >
-                    </ag-grid-angular>
-                </div>
-            </ExtContainer>
-        </ExtPanel>
     </ExtPanel>
-    
 </ExtContainer>

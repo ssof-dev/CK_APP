@@ -154,6 +154,40 @@ export class AuthButton{
         this._authButtonDisabled.deleteBtn      = false;     //삭제
         this._authButtonDisabled.excelBtn       = false;     //엑셀
         this._authButtonDisabled.pdfBtn         = false;     //PDF
-        this._authButtonDisabled.cancelBtn      = false;    //취소
+        this._authButtonDisabled.cancelBtn      = false;     //취소
+    }
+
+    /**
+     * 그리드 Row 선택했을 때 버튼 제어
+     */
+    gridClickBtnDisableControll(){
+
+        //신규, 수정, 삭제, 엑셀, PDF 버튼 활성화
+        //조회 비활성화
+        this._authButtonDisabled.searchBtn      = true;      //조회
+        this._authButtonDisabled.newBtn         = false;     //신규
+        this._authButtonDisabled.editBtn        = false;     //수정
+        this._authButtonDisabled.saveBtn        = true;      //저장
+        this._authButtonDisabled.deleteBtn      = false;     //삭제
+        this._authButtonDisabled.excelBtn       = false;     //엑셀
+        this._authButtonDisabled.pdfBtn         = false;     //PDF
+    }
+
+    /**
+     * 모든 버튼 비활
+     */
+    allKillBtnControll(){
+        
+        //취소 버튼제외 모두 비활
+        this._authButtonDisabled.searchBtn  = true;     //조회
+        this._authButtonDisabled.newBtn     = true;     //신규
+        this._authButtonDisabled.editBtn    = true;     //수정
+        this._authButtonDisabled.saveBtn    = true;     //저장
+        this._authButtonDisabled.deleteBtn  = true;     //삭제
+        this._authButtonDisabled.excelBtn   = true;     //엑셀
+        this._authButtonDisabled.approvalBtn= true;     //승인
+        this._authButtonDisabled.deniedBtn  = true;     //반려
+        this._authButtonDisabled.excelBtn   = true;     //엑셀
+        this._authButtonDisabled.pdfBtn     = true;     //PDF
     }
 }
