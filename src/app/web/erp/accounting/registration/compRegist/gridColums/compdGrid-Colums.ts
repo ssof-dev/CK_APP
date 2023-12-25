@@ -15,36 +15,50 @@ export class CompdGridColums{
         {
             headerName: '회계기',
             field: 'useCompKi',
-            width: 60
+            filter: false,                  //필터 여부
+            editable: false,                //열의 편집여부
+            headerCheckboxSelection: true,  //헤더의 체크박스 여부
+            checkboxSelection: true,        //행의 체크박스 여부
+            width: 100
         },
         {
             headerName: '회계연도',
             field: 'frYmd',
-            width: 250,
+            width: 150,
+            filter: false,                  //필터 여부
+            editable: false,                //열의 편집여부
             cellStyle: {textAlign: "center"}
         },
         {
             headerName: '대표자',
             field: 'ceoNm',
             width: 70,
+            filter: false,                  //필터 여부
+            editable: false,                //열의 편집여부
             cellStyle: {textAlign: "center"},
         },
         {
             headerName: '담당자',
             field: 'reprPersonCd',
             width: 70,
+            filter: false,                  //필터 여부
+            editable: false,                //열의 편집여부
             cellStyle: {textAlign: "center"},
         },
         {
             headerName: '연락처',
             field: 'reprPersonRelNo',
             width: 150,
+            filter: false,                  //필터 여부
+            editable: false,                //열의 편집여부
             cellStyle: {textAlign: "center"},
         },
         {
             headerName: '홈페이지',
             field: 'homePage',
             flex: 1,
+            filter: false,                  //필터 여부
+            editable: false,                //열의 편집여부
             cellStyle: {textAlign: "center"},
         },
     ];

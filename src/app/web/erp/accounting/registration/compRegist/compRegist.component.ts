@@ -143,8 +143,6 @@ export class CompRegistComponent implements OnInit, AfterViewInit{
         //업체 그리드에서 현재 선택된 행에 대한 데이터를 반환
         let param = this.compmGridConfig.gridApi.getSelectedRows();
 
-        console.log('param', param)
-
         if(param.length === 1){
 
             //데이터를 모델에 저장
@@ -177,21 +175,39 @@ export class CompRegistComponent implements OnInit, AfterViewInit{
         })
     }
 
+    //업체 그리드 행 클릭 시 해당 정보 업체폼에 전달
     compdGridSelection(e: any){
 
-        //업체 상세정보 그리드에서 현재 선택된 행에 대한 데이터를 가져오기
+        //업체 회계기정보 그리드에서 현재 선택된 행에 대한 데이터를 가져오기
         let param = this.compdGridConfig.gridApi.getSelectedRows();
 
         if(param.length === 1){
 
             //업체상세 모델에 데이터를 저장
             this.compdModel = JSON.parse(JSON.stringify(param[0]));
+        }        
+    }
+
+    //업체 그리드 행 2개 이상 선택시 업체상세 그리드 초기화
+    checkSelectRow(e: any){
+
+        //선택한 체크박스 감지
+        let compmData = this.compmGridConfig.gridApi.getSelectedNodes();
+
+        if(compmData.length > 1){
+
+            //회계기 정보 그리드 초기화
+            this.compdGridConfig.gridApi.setRowData([]);
         }
+    }
+
+    zipNoBtn() {
+        console.log("검색검색")
     }
 
     //조회 버튼 이벤트
     onTapQuery(){
-
+        
     }
 
     //신규 버튼 이벤트
@@ -217,7 +233,9 @@ export class CompRegistComponent implements OnInit, AfterViewInit{
 
             this.compmModel.rowType = '';
             this.compdModel.rowType = 'insert';
-
+            
+            //사용여부를 지정하여 넘겨주기
+            this.compdModel.useYn = 'Y';
 
             
         }else{//회사정보만 추가 or 회사정보, 회계기 정보 추가시
@@ -234,6 +252,10 @@ export class CompRegistComponent implements OnInit, AfterViewInit{
             //모델 상태 추가
             this.compmModel.rowType = 'insert';
             this.compdModel.rowType = 'insert';
+
+            //사용여부 추가
+            this.compmModel.useYn = 'Y';
+            this.compdModel.useYn = 'Y';
         }
 
     }
@@ -273,11 +295,9 @@ export class CompRegistComponent implements OnInit, AfterViewInit{
     //저장 버튼 이벤트
     onTapSave(){
         let param = {
-            header : this.compmModel
-        ,   detail: this.compdModel
+            header : [this.compmModel]
+        ,   detail: [this.compdModel]
         }
-
-        console.log(param);
         
         this.service.saveCompInfo(param).subscribe({
             next:(response: any) =>{
@@ -316,6 +336,49 @@ export class CompRegistComponent implements OnInit, AfterViewInit{
     //삭제 버튼 이벤트
     onTapDelete(){
        
+        //체크박스가 체크된 행 데이터 가져오기
+        let compmData = this.compmGridConfig.gridApi.getSelectedRows();
+        let compdData = this.compdGridConfig.gridApi.getSelectedRows();
+
+        let param = {
+            header: compmData
+        ,   detail: compdData
+        }
+
+
+        let rowNum = compmData.length + compdData.length;
+        console.log('삭제', param)
+        //모달 띄우고 물어보고 지우기
+        this.comAlert.showAlert('question','확인',`${rowNum}개의 행을 삭제합니다.`, true, (btn:boolean)=>{
+            
+            if(btn){
+                this.service.deleteComp(param).subscribe({
+                    next: (response: any) => {
+        
+                        if(response.stateCd === 'OK'){
+        
+                            //성공 모달 출력
+                            this.comAlert.showAlert('success','',`삭제 성공`, false);
+                            
+                            //모델 초기화
+                            this.compmModel = new CompRegistModel();
+                            this.compdModel = new CompdModel();
+        
+                            //선택 초기화
+                            this.compmGridConfig.gridApi.deselectAll();
+                            this.compdGridConfig.gridApi.deselectAll();
+        
+                            //사업조회
+                            this.apiSelectListHeader();
+        
+                        }
+                    },
+                    error: (response: any) => {
+                        this.comAlert.showAlert('error','',`삭제 실패`, false);
+                    }
+                })
+            }
+        });
     }
 
     //승인요청 버튼 이벤트
