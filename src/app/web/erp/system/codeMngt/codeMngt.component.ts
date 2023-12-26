@@ -121,26 +121,6 @@ export class CodeMngtComponent implements OnInit {
         });
    }
 
-
-   	// Dialog Open
-	openPopUp = (event) => {
-		// 팝업 호출 파라메터 셋팅
-		let item = {
-			id: 'app-dSearchAddr'
-		}
-
-		// 팝업 호출
-		this.indexCmp.dialogView(item, (result) => {
-			//결과처리 (무조건 List 형식으로 들어옴)
-			if (result.length > 0) {
-                // paramb :this.codeModel.aa;
-			} else {
-                // this.codeModel.bb = result[0].bb;
-				// 화면 버튼 모드 설정
-			}
-		});
-	}
-
    //신규 버튼 이벤트
     onTapNew(){
     }

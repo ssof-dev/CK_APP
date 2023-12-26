@@ -20,7 +20,15 @@
     <ExtPanel [shadow]="true" [layout]="{type: 'vbox', align: 'stretch'}" style="background-color: white;">
 
         <!-- 검색 위치 -->
-        <ExtPanel [flex]="0.1" [border]="true" [layout]="{type: 'hbox', align: 'stretch'}"></ExtPanel>
+        <ExtPanel [flex]="0.1" [border]="true" [layout]="{type: 'hbox', align: 'stretch'}" [bodyStyle]="{'background': '#ffffff'}">
+            <ExtFieldset layout="hbox">
+                <ExtTextfield label="검색" 
+                    [flex]="1"
+                    [editable]="false"
+                    [triggers]="{click: {type: 'search', side: 'right', handler : searchBtn}}"
+                ></ExtTextfield>
+            </ExtFieldset>
+        </ExtPanel>
 
         <!-- 메인 위치 -->
         <ExtPanel [flex]="0.9" [border]="true" [layout]="{type: 'hbox', align: 'stretch'}">
@@ -80,9 +88,13 @@
                     <ExtFormpanel [data]="compmModel" [flex]="1" padding="0" layout="vbox" [bodyStyle]="{'background': '#ffffff'}">
 
                         <ExtFieldset layout="hbox">
-                            <ExtTextfield label="사업업체번호" [disabled]="true" 
+                            <ExtTextfield label="사업업체번호" [disabled]="this.compmFormDisable" 
                                 [value]="(compmModel.useCompNo || '')" 
+                                (keyup)="compmModel.useCompNo = $event.sender.rawValue"
+                                (blur)="compmModel.useCompNo = $event.sender.rawValue" 
                                 [flex]="1"
+                                [required]="this.textRequired"
+                                [requiredMessage]="'업체번호를 입력하지 않았습니다.'"
                             ></ExtTextfield>
 
                             <ExtTextfield label="사업업체명칭" [disabled]="this.compmFormDisable" 
@@ -90,6 +102,9 @@
                                 (keyup)="compmModel.useCompNm = $event.sender.rawValue"
                                 (blur)="compmModel.useCompNm = $event.sender.rawValue" 
                                 [flex]="1"
+                                style="margin-left: 20px;"
+                                [required]="this.textRequired"
+                                [requiredMessage]="'업체명칭을 입력하지 않았습니다.'"
                             ></ExtTextfield>
 
                             <ExtTextfield label="업태" [disabled]="this.compmFormDisable"
@@ -97,6 +112,9 @@
                                 (keyup)="compmModel.busiBtypeNm = $event.sender.rawValue"
                                 (blur)="compmModel.busiBtypeNm = $event.sender.rawValue" 
                                 [flex]="1"
+                                style="margin-left: 20px;"
+                                [required]="this.textRequired"
+                                [requiredMessage]="'업태를 입력하지 않았습니다.'"
                             ></ExtTextfield>
                         </ExtFieldset>
 
@@ -106,6 +124,8 @@
                                 (keyup)="compmModel.busiBkindNm = $event.sender.rawValue"
                                 (blur)="compmModel.busiBkindNm = $event.sender.rawValue" 
                                 [flex]="1"
+                                [required]="this.textRequired"
+                                [requiredMessage]="'종목을 입력하지 않았습니다.'"
                             ></ExtTextfield>
 
                             <ExtTextfield label="사업자번호" [disabled]="this.compmFormDisable"
@@ -113,6 +133,9 @@
                                 (keyup)="compmModel.busiNo = $event.sender.rawValue"
                                 (blur)="compmModel.busiNo = $event.sender.rawValue" 
                                 [flex]="1"   
+                                style="margin-left: 20px;"
+                                [required]="this.textRequired"
+                                [requiredMessage]="'사업자번호를 입력하지 않았습니다.'"
                             ></ExtTextfield>
 
                             <ExtTextfield label="법인번호" [disabled]="this.compmFormDisable"
@@ -120,6 +143,9 @@
                                 (keyup)="compmModel.cbodyRegNo = $event.sender.rawValue"
                                 (blur)="compmModel.cbodyRegNo = $event.sender.rawValue" 
                                 [flex]="1"   
+                                style="margin-left: 20px;"
+                                [required]="this.textRequired"
+                                [requiredMessage]="'법인번호를 입력하지 않았습니다.'"
                             ></ExtTextfield>
                         </ExtFieldset>
 
@@ -145,6 +171,7 @@
                                 (keyup)="compmModel.cateCd = $event.sender.rawValue"
                                 (blur)="compmModel.cateCd = $event.sender.rawValue"   
                                 [flex]="1"   
+                                style="margin-left: 20px;"
                             ></ExtTextfield>
 
                             <ExtTextfield label="총괄납부번호" [disabled]="this.compmFormDisable"
@@ -152,6 +179,7 @@
                                 (keyup)="compmModel.totPayNo = $event.sender.rawValue"
                                 (blur)="compmModel.totPayNo = $event.sender.rawValue"  
                                 [flex]="1"   
+                                style="margin-left: 20px;"
                             ></ExtTextfield>
                         </ExtFieldset>
 
@@ -168,13 +196,15 @@
                                 (keyup)="compmModel.openYmd = $event.sender.rawValue"
                                 (blur)="compmModel.openYmd = $event.sender.rawValue"  
                                 [flex]="1"      
+                                style="margin-left: 20px;"
                             ></ExtTextfield>
 
                             <ExtTextfield label="폐업일자" [disabled]="this.compmFormDisable"
                                 [value]="(compmModel.bcloseYmd || '')"
                                 (keyup)="compmModel.bcloseYmd = $event.sender.rawValue"
                                 (blur)="compmModel.bcloseYmd = $event.sender.rawValue" 
-                                [flex]="1"      
+                                [flex]="1"     
+                                style="margin-left: 20px;" 
                             ></ExtTextfield>
                         </ExtFieldset>
 
@@ -198,6 +228,7 @@
                             <ExtCombobox label="{{ '원가대체여부' | translate }}" 
                                 placeholder=""
                                 [flex]="1"     
+                                style="margin-left: 20px;"
                                 [disabled]="this.compmFormDisable"
                                 [editable]="false"
                                 [store]="this.primeYn" 
@@ -216,6 +247,7 @@
                                 (keyup)="compmModel.reprTelNo = $event.sender.rawValue"
                                 (blur)="compmModel.reprTelNo = $event.sender.rawValue"    
                                 [flex]="1"     
+                                style="margin-left: 20px;"
                             ></ExtTextfield>
                         </ExtFieldset>
 
@@ -248,7 +280,7 @@
                         <ExtTitle [title]="'회계기 정보'" [style]="{'font-size': '13px', 'margin-bottom': '13px'}"></ExtTitle>
                     </ExtTitlebar>
 
-                    <div #extitem style="width: 100%; height: calc(100% - 65px);">
+                    <div #extitem style="width: 100%; height: calc(100% - 70px);">
                         <ag-grid-angular 
                             #agGrid 
                             style="width: 100%; height: 100%;" class="ag-theme-balham" 
@@ -288,28 +320,34 @@
                         <ExtTitle [title]="'회계기 상세정보'" [style]="{'font-size': '13px', 'margin-bottom': '13px'}"></ExtTitle>
                     </ExtTitlebar>
 
-                    <ExtFormpanel style="width: 100%; height: calc(100% - 65px);" padding="0" layout="vbox" [bodyStyle]="{'background': '#ffffff'}">
+                    <ExtFormpanel style="width: 100%; height: calc(100% - 70px);" padding="0" layout="vbox" [bodyStyle]="{'background': '#ffffff'}">
 
                         <ExtPanel [flex]="5" [border]="true" [bodyStyle]="{'background': '#ffffff'}" [scrollable]="true">
 
                             <ExtFieldset layout="hbox">
-                                <ExtTextfield label="회계 기" [disabled]="true" 
+                                <ExtTextfield label="회계 기" [disabled]="this.compdFormDisable" 
                                     [value]="(compdModel.useCompKi || '')" 
+                                    (keyup)="compdModel.useCompKi = $event.sender.rawValue"
+                                    (blur)="compdModel.useCompKi = $event.sender.rawValue"
                                     [flex]="1"
                                 ></ExtTextfield>
 
-                                <ExtTextfield label="회계연도" [disabled]="this.compdFormDisable" 
-                                    [value]="(compdModel.frYmd || '')" 
+                                <ExtDatefield label="회계연도" [disabled]="this.compdFormDisable" 
+                                    [value]="(compdModel.frYmd+'~'+compdModel.toYmd || '')" 
                                     (keyup)="compdModel.frYmd = $event.sender.rawValue"
                                     (blur)="compdModel.frYmd = $event.sender.rawValue"
                                     [flex]="1"
-                                ></ExtTextfield>
+                                    style="margin-left: 20px;"
+                                ></ExtDatefield>
 
                                 <ExtTextfield label="대표자명" [disabled]="this.compdFormDisable" 
                                     [value]="(compdModel.ceoNm || '')" 
                                     (keyup)="compdModel.ceoNm = $event.sender.rawValue"
                                     (blur)="compdModel.ceoNm = $event.sender.rawValue"
                                     [flex]="1"
+                                    style="margin-left: 20px;"
+                                    [required]="this.textRequired"
+                                    [requiredMessage]="'대표자명을 입력하지 않았습니다.'"
                                 ></ExtTextfield>
 
                             </ExtFieldset>
@@ -325,12 +363,14 @@
                                     [triggers]="{click: {type: 'search', side: 'right', handler : zipNoBtn }}"
                                 >
                                 </ExtTextfield>
+                            </ExtFieldset>
 
+                            <ExtFieldset layout="hbox">
                                 <ExtTextfield label="주소" [disabled]="true" 
                                     [value]="(compdModel.compAddr || '')"
                                     (keyup)="compdModel.compAddr = $event.sender.rawValue"
                                     (blur)="compdModel.compAddr = $event.sender.rawValue"
-                                    [flex]="1"
+                                    [flex]="2.07"
                                 ></ExtTextfield>
                             
                                 <ExtTextfield label="상세주소" [disabled]="this.compdFormDisable" 
@@ -338,6 +378,7 @@
                                     (keyup)="compdModel.compAddrDesc = $event.sender.rawValue"
                                     (blur)="compdModel.compAddrDesc = $event.sender.rawValue"
                                     [flex]="1"
+                                    style="margin-left: 20px;"
                                 ></ExtTextfield>
                             </ExtFieldset>
         
@@ -348,7 +389,7 @@
                                     (blur)="compdModel.reprPersonCd = $event.sender.rawValue"
                                     [flex]="1"
                                     [editable]="false"
-                                    [triggers]="{click: {type: 'search', side: 'right', handler : zipNoBtn}}"
+                                    [triggers]="{click: {type: 'search', side: 'right', handler : reprPersonBtn}}"
                                 ></ExtTextfield>
 
                                 <ExtTextfield label="담당자연락처" [disabled]="this.compdFormDisable" 
@@ -356,6 +397,7 @@
                                     (keyup)="compdModel.eTaxBillPersonTelNo = $event.sender.rawValue"
                                     (blur)="compdModel.eTaxBillPersonTelNo = $event.sender.rawValue"
                                     [flex]="1"
+                                    style="margin-left: 20px;"
                                 ></ExtTextfield>
 
                                 <ExtTextfield label="홈텍스ID" [disabled]="this.compdFormDisable" 
@@ -363,6 +405,7 @@
                                     (keyup)="compdModel.homeTaxId = $event.sender.rawValue"
                                     (blur)="compdModel.homeTaxId = $event.sender.rawValue"    
                                     [flex]="1"
+                                    style="margin-left: 20px;"
                                 ></ExtTextfield>
                             </ExtFieldset>
                             
@@ -379,6 +422,7 @@
                                     (keyup)="compdModel.accGroupNo = $event.sender.rawValue"
                                     (blur)="compdModel.accGroupNo = $event.sender.rawValue" 
                                     [flex]="1"
+                                    style="margin-left: 20px;"
                                 ></ExtTextfield>
 
                                 <ExtTextfield label="예산계정단계" [disabled]="this.compdFormDisable"
@@ -386,6 +430,7 @@
                                     (keyup)="compdModel.budAccStep = $event.sender.rawValue"
                                     (blur)="compdModel.budAccStep = $event.sender.rawValue" 
                                     [flex]="1"
+                                    style="margin-left: 20px;"
                                 ></ExtTextfield>
                             </ExtFieldset>
                         </ExtPanel>
@@ -411,7 +456,7 @@
                                     (blur)="compdModel.reprPersonCd = $event.sender.rawValue" 
                                     [flex]="1"
                                     [editable]="false"
-                                    [triggers]="{click: {type: 'search', side: 'right', handler : zipNoBtn}}"
+                                    [triggers]="{click: {type: 'search', side: 'right', handler : reprPersonBtn}}"
                                  ></ExtTextfield>
 
                                 <ExtTextfield label="담당자연락처" [disabled]="this.compdFormDisable" 
@@ -419,6 +464,7 @@
                                     (keyup)="compdModel.eTaxBillPersonTelNo = $event.sender.rawValue"
                                     (blur)="compdModel.eTaxBillPersonTelNo = $event.sender.rawValue" 
                                     [flex]="1"
+                                    style="margin-left: 20px;"
                                 ></ExtTextfield>
                             </ExtFieldset>
 

@@ -18,8 +18,9 @@ export class CompdGridColums{
             filter: false,                  //필터 여부
             editable: false,                //열의 편집여부
             headerCheckboxSelection: true,  //헤더의 체크박스 여부
-            checkboxSelection: true,        //행의 체크박스 여부
-            width: 100
+            checkboxSelection: true,
+            width: 100,
+            cellStyle: {textAlign: "center"}
         },
         {
             headerName: '회계연도',

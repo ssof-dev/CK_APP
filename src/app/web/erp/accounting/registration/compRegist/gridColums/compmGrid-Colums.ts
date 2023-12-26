@@ -14,11 +14,16 @@ export class CompmGridColums{
     public columnDefs = [
         {
             headerName: 'SQ',
+            field: 'No',
+            type: 'numericColumn',
             filter: false,                  //필터 여부
             editable: false,                //열의 편집여부
             headerCheckboxSelection: true,  //헤더의 체크박스 여부
             checkboxSelection: true,        //행의 체크박스 여부
-            width: 50,
+            valueGetter: (param:any) =>{
+                return param.node.rowIndex + 1;
+            },
+            width: 80,
         },
         {
             headerName: '업체번호',
@@ -34,7 +39,7 @@ export class CompmGridColums{
             width: 200,
             filter: false,                  //필터 여부
             editable: false,                //열의 편집여부
-            cellStyle: {textAlign: "center"},
+            cellStyle: {textAlign: "left"},
         },
         {
             headerName: '사업자번호',

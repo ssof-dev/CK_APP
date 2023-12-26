@@ -76,8 +76,12 @@
 }
 
 input:read-only, textarea:read-only{
-    background-color: #f9f9f9 !important;
+    /* ackground-color: #f9f9f9 !important;b */
     color:#2a3a40 !important;
+}
+
+label:read-only{
+    font-weight: bold !important;
 }
 
 .title-toolbar{
