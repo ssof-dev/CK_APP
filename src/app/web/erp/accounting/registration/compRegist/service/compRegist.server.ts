@@ -99,4 +99,22 @@ export class CompRegistService extends ApiHttpService{
     deleteComp(params : any): Observable<any>{
         return this.httpPost('/api/public/compRegist/deleteComp', params);
     }
+
+    /**
+     * 업체 정보 복구
+     * @param params 
+     * @returns 
+     */
+    compmRestore(params : any): Observable<any>{
+        return this.httpPost('/api/public/compRegist/compmRestore', params);
+    }
+
+    /**
+     * 회계기 정보 복구
+     * @param params 
+     * @returns 
+     */
+    compdRestore(params : any): Observable<any>{
+        return this.httpPost('/api/public/compRegist/compdRestore', params);
+    }
 }

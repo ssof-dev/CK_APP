@@ -23,10 +23,12 @@
         <ExtPanel [flex]="0.1" [border]="true" [layout]="{type: 'hbox', align: 'stretch'}" [bodyStyle]="{'background': '#ffffff'}">
             <ExtFieldset layout="hbox">
                 <ExtTextfield label="검색" 
+                    #searchField
                     [flex]="1"
-                    [editable]="false"
-                    [triggers]="{click: {type: 'search', side: 'right', handler : searchBtn}}"
-                ></ExtTextfield>
+                    [triggers]="{click: {type: 'search', side: 'right'}}"
+                    (keyup)="searchBtn($event.sender.rawValue)"
+                >
+                </ExtTextfield>
             </ExtFieldset>
         </ExtPanel>
 
@@ -113,8 +115,6 @@
                                 (blur)="compmModel.busiBtypeNm = $event.sender.rawValue" 
                                 [flex]="1"
                                 style="margin-left: 20px;"
-                                [required]="this.textRequired"
-                                [requiredMessage]="'업태를 입력하지 않았습니다.'"
                             ></ExtTextfield>
                         </ExtFieldset>
 
@@ -124,8 +124,6 @@
                                 (keyup)="compmModel.busiBkindNm = $event.sender.rawValue"
                                 (blur)="compmModel.busiBkindNm = $event.sender.rawValue" 
                                 [flex]="1"
-                                [required]="this.textRequired"
-                                [requiredMessage]="'종목을 입력하지 않았습니다.'"
                             ></ExtTextfield>
 
                             <ExtTextfield label="사업자번호" [disabled]="this.compmFormDisable"
@@ -134,8 +132,6 @@
                                 (blur)="compmModel.busiNo = $event.sender.rawValue" 
                                 [flex]="1"   
                                 style="margin-left: 20px;"
-                                [required]="this.textRequired"
-                                [requiredMessage]="'사업자번호를 입력하지 않았습니다.'"
                             ></ExtTextfield>
 
                             <ExtTextfield label="법인번호" [disabled]="this.compmFormDisable"
@@ -144,8 +140,6 @@
                                 (blur)="compmModel.cbodyRegNo = $event.sender.rawValue" 
                                 [flex]="1"   
                                 style="margin-left: 20px;"
-                                [required]="this.textRequired"
-                                [requiredMessage]="'법인번호를 입력하지 않았습니다.'"
                             ></ExtTextfield>
                         </ExtFieldset>
 
@@ -191,21 +185,25 @@
                                 [flex]="1"   
                             ></ExtTextfield>
 
-                            <ExtTextfield label="개업일자" [disabled]="this.compmFormDisable"
-                                [value]="(compmModel.openYmd || '')"
+                            <ExtDatefield label="개업일자" [disabled]="this.compdFormDisable" 
+                                [value]="(compmModel.openYmd || '')" 
+                                destroyPickerOnHide="true"
+                                [dateFormat]="'Ymd'"
                                 (keyup)="compmModel.openYmd = $event.sender.rawValue"
-                                (blur)="compmModel.openYmd = $event.sender.rawValue"  
-                                [flex]="1"      
+                                (blur)="compmModel.openYmd = $event.sender.rawValue"
+                                [flex]="1"
                                 style="margin-left: 20px;"
-                            ></ExtTextfield>
+                            ></ExtDatefield>
 
-                            <ExtTextfield label="폐업일자" [disabled]="this.compmFormDisable"
-                                [value]="(compmModel.bcloseYmd || '')"
+                            <ExtDatefield label="폐업일자" [disabled]="this.compdFormDisable" 
+                                [value]="(compmModel.bcloseYmd || '')" 
+                                destroyPickerOnHide="true"
+                                [dateFormat]="'Ymd'"
                                 (keyup)="compmModel.bcloseYmd = $event.sender.rawValue"
-                                (blur)="compmModel.bcloseYmd = $event.sender.rawValue" 
-                                [flex]="1"     
-                                style="margin-left: 20px;" 
-                            ></ExtTextfield>
+                                (blur)="compmModel.bcloseYmd = $event.sender.rawValue"
+                                [flex]="1"
+                                style="margin-left: 20px;"
+                            ></ExtDatefield>
                         </ExtFieldset>
 
                         <ExtFieldset layout="hbox">
@@ -330,35 +328,49 @@
                                     (keyup)="compdModel.useCompKi = $event.sender.rawValue"
                                     (blur)="compdModel.useCompKi = $event.sender.rawValue"
                                     [flex]="1"
+                                    [required]="this.textRequired"
+                                    [requiredMessage]="'회계기를 입력하지 않았습니다.'"
                                 ></ExtTextfield>
 
-                                <ExtDatefield label="회계연도" [disabled]="this.compdFormDisable" 
-                                    [value]="(compdModel.frYmd+'~'+compdModel.toYmd || '')" 
+                                <ExtDatefield label="시작일" [disabled]="this.compdFormDisable" 
+                                    [value]="(compdModel.frYmd || '')" 
+                                    destroyPickerOnHide="true"
+                                    [dateFormat]="'Ymd'"
                                     (keyup)="compdModel.frYmd = $event.sender.rawValue"
                                     (blur)="compdModel.frYmd = $event.sender.rawValue"
                                     [flex]="1"
                                     style="margin-left: 20px;"
                                 ></ExtDatefield>
 
-                                <ExtTextfield label="대표자명" [disabled]="this.compdFormDisable" 
-                                    [value]="(compdModel.ceoNm || '')" 
-                                    (keyup)="compdModel.ceoNm = $event.sender.rawValue"
-                                    (blur)="compdModel.ceoNm = $event.sender.rawValue"
+                                <ExtDatefield label="종료일" [disabled]="this.compdFormDisable" 
+                                    [value]="(compdModel.toYmd || '')" 
+                                    destroyPickerOnHide="true"
+                                    [dateFormat]="'Ymd'"
+                                    (keyup)="compdModel.toYmd = $event.sender.rawValue"
+                                    (blur)="compdModel.toYmd = $event.sender.rawValue"
                                     [flex]="1"
                                     style="margin-left: 20px;"
-                                    [required]="this.textRequired"
-                                    [requiredMessage]="'대표자명을 입력하지 않았습니다.'"
-                                ></ExtTextfield>
+                                ></ExtDatefield>
 
                             </ExtFieldset>
         
         
                             <ExtFieldset layout="hbox">
+                                <ExtTextfield label="대표자명" [disabled]="this.compdFormDisable" 
+                                    [value]="(compdModel.ceoNm || '')" 
+                                    (keyup)="compdModel.ceoNm = $event.sender.rawValue"
+                                    (blur)="compdModel.ceoNm = $event.sender.rawValue"
+                                    [flex]="1"
+                                    [required]="this.textRequired"
+                                    [requiredMessage]="'대표자명을 입력하지 않았습니다.'"
+                                ></ExtTextfield>
+
                                 <ExtTextfield label="우편번호" [disabled]="this.compdFormDisable" 
                                     [value]="(compdModel.zipNo || '')" 
                                     (keyup)="compdModel.zipNo = $event.sender.rawValue"
                                     (blur)="compdModel.zipNo = $event.sender.rawValue"
-                                    [flex]="1"
+                                    [flex]="2"
+                                    style="margin-left: 10px;"
                                     [editable]="false"
                                     [triggers]="{click: {type: 'search', side: 'right', handler : zipNoBtn }}"
                                 >

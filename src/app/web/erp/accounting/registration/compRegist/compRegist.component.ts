@@ -25,7 +25,7 @@ export class CompRegistComponent implements OnInit, AfterViewInit{
     private comAlert: ComAlert = new ComAlert();
 
     //조회 model 선언
-    searchFormModel: CompRegistModel = new CompRegistModel();
+    searchModel: CompRegistModel = new CompRegistModel();
 
     //공용버튼 제어
     authButtonDisabled!: AuthButtonDisabledModel;
@@ -54,6 +54,8 @@ export class CompRegistComponent implements OnInit, AfterViewInit{
     compdFormDisable : boolean = true;
 
     textRequired : boolean = false;
+
+    saveType : any;
 
 
     //업체구분 콤보박스
@@ -123,7 +125,7 @@ export class CompRegistComponent implements OnInit, AfterViewInit{
         this.compmGridConfig.clear();
 
         //업체 목록 조회
-        this.service.selectCompRegistList(this.searchFormModel).subscribe({
+        this.service.selectCompRegistList(this.searchModel).subscribe({
             next:(response: any) =>{
                 
                 if(response.stateCd === 'OK' || response.stateCd === 'NO_DATA'){
@@ -211,6 +213,9 @@ export class CompRegistComponent implements OnInit, AfterViewInit{
     
     //신규 버튼 이벤트
     onTapNew(){
+        //저장 타입 변경
+        this.saveType = 'insert';
+
         //그리드 클릭 비활
         this.compmGridConfig.gridClickOption = true;
         this.compdGridConfig.gridClickOption = true;
@@ -282,15 +287,15 @@ export class CompRegistComponent implements OnInit, AfterViewInit{
     
     //수정버튼 이벤트
     onTapEdit(){
-        if(this.comFun.isEmpty(this.compmModel.useCompNm)
-            || this.comFun.isEmpty(this.compmModel.busiBtypeNm)
-            || this.comFun.isEmpty(this.compmModel.busiBkindNm)
-            || this.comFun.isEmpty(this.compmModel.busiNo)
-            || this.comFun.isEmpty(this.compmModel.cbodyRegNo)){
-            // this.comAlert.showAlert('false','',`필수값을 입력하세요`, false);
-            this.comFun.alert(this.comFun.i18n('확인'), "필수값 입력하세요");
-            return;
-        }
+        this.saveType = 'edit';
+        // if(this.comFun.isEmpty(this.compmModel.useCompNo)
+        //     || this.comFun.isEmpty(this.compmModel.useCompNm)
+        //     || this.comFun.isEmpty(this.compdModel.useCompKi)
+        //     || this.comFun.isEmpty(this.compdModel.ceoNm)){
+        //     // this.comAlert.showAlert('false','',`필수값을 입력하세요`, false);
+        //     this.comFun.alert(this.comFun.i18n('확인'), "필수값 입력하세요");
+        //     return;
+        // }
         
         //저장 버튼 활성화
         this.authButton.allKillBtnControll();
@@ -326,14 +331,17 @@ export class CompRegistComponent implements OnInit, AfterViewInit{
         //필수항목 활성화
         this.textRequired = true;
 
-        if(this.comFun.isEmpty(this.compmModel.useCompNm)
-            || this.comFun.isEmpty(this.compmModel.busiBtypeNm)
-            || this.comFun.isEmpty(this.compmModel.busiBkindNm)
-            || this.comFun.isEmpty(this.compmModel.busiNo)
-            || this.comFun.isEmpty(this.compmModel.cbodyRegNo)){
-            // this.comAlert.showAlert('false','',`필수값을 입력하세요`, false);
-            this.comFun.alert(this.comFun.i18n('확인'), "필수값 입력하세요");
-            return;
+        if(this.saveType === 'insert'){
+            if(this.comFun.isEmpty(this.compmModel.useCompNo)
+                || this.comFun.isEmpty(this.compmModel.useCompNm)
+                || this.comFun.isEmpty(this.compdModel.useCompKi)
+                || this.comFun.isEmpty(this.compdModel.ceoNm)){
+                // this.comAlert.showAlert('false','',`필수값을 입력하세요`, false);
+                this.comFun.alert(this.comFun.i18n('확인'), "필수값 입력하세요");
+                return;
+            }
+        }else if(this.saveType === 'edit'){
+            //수정 옵션에 따라서 나눠짐
         }
 
         let param = {
@@ -343,12 +351,36 @@ export class CompRegistComponent implements OnInit, AfterViewInit{
         
         this.service.saveCompInfo(param).subscribe({
             next:(response: any) =>{
-                if(response.stateCd === 'COMPMFIND'){
-                    this.comFun.alert(this.comFun.i18n('확인'), "사업업체번호가 이미 존재합니다.");
+                if(response.stateCd === 'COMPMFIND'){//사업 신규 추가시 사업체 번호가 있을 경우
+                    this.comFun.confirm(this.comFun.i18n('확인'), this.comFun.i18n('사업업체번호가 이미 존재합니다. 조회하시겠습니까?'), (e) => {
+                        if (e === 'yes'){
+                            //use_yn을 다시 Y로 바꿔주고 출력 시켜주기
+                            //회사 이름 지워주기
+                            this.compmModel.useCompNm = '';
+                            
+                            this.compmRestore(this.compmModel);
 
-                }else if(response.stateCd === 'COMPDFIND'){
-                    this.comFun.alert(this.comFun.i18n('확인'), "회계기가 이미 존재합니다.");
+                        }else if(e === 'no'){
+                            this.comFun.alert(this.comFun.i18n('확인'), "사업업체번호를 다시 작성해주세요");
+                        }
+                    });
 
+                }else if(response.stateCd === 'COMPDFIND'){//신규 추가시 회계기 번호가 있을 경우
+                    this.comFun.confirm(this.comFun.i18n('확인'), this.comFun.i18n('회계기가 이미 존재합니다. 조회하시겠습니까?'), (e) => {
+                        if(e === 'yes'){
+                            //use_yn을 다시 Y로 바꿔주고 출력 시켜주기
+                            this.compdModel.useCompNo = this.compmModel.useCompNo;
+                            this.compdRestore(this.compdModel);
+
+                        }else if(e === 'no'){
+                            this.comFun.alert(this.comFun.i18n('확인'), "회계기를 다시 작성해주세요");
+                        }
+                    });
+
+                }else if(response.stateCd === 'EDITCOMPMFIND'){//사업체 수정시 사업코드가 있을 경우
+                    this.comFun.alert(this.comFun.i18n('확인'), "이미 존재하고 있는 회사번호 입니다. 다시 입력해주세요");
+                }else if(response.stateCd === 'EDITCOMPDFIND'){//회계기 수정시 회계기 번호가 있을 경우
+                    this.comFun.alert(this.comFun.i18n('확인'), "이미 존재하고 있는 회계기번호 입니다. 다시 입력해주세요");
                 }else if(response.stateCd === 'OK'){
                     //공용버튼 활성 제어
                     this.authButton.gridClickBtnDisableControll();
@@ -454,8 +486,8 @@ export class CompRegistComponent implements OnInit, AfterViewInit{
     //취소버튼 이벤트
     onTapCancel(){
 
-       //필수항목 활성화
-       this.textRequired = false;
+        //필수항목 활성화
+        this.textRequired = false;
         
         //공용버튼 활성 제어
         this.authButton.gridClickBtnDisableControll();
@@ -466,6 +498,9 @@ export class CompRegistComponent implements OnInit, AfterViewInit{
         
         this.compmModel = new CompRegistModel();
         this.compdModel = new CompdModel();
+
+        //회계끼 그리드 초기화
+        this.compdGridConfig.clear();
         
         //폼 비활
         this.compmFormDisable = true;
@@ -498,7 +533,60 @@ export class CompRegistComponent implements OnInit, AfterViewInit{
 
     }
 
-    searchBtn(){
+    //업체 정보 복구
+    compmRestore(cmModel){
         
+        this.service.compmRestore(cmModel).subscribe({
+            next: (response: any) => {
+                if(response.stateCd === 'RESTORE'){
+                    this.comFun.alert(this.comFun.i18n('확인'), "복구 성공");
+                }else if(response.stateCd === 'OK'){
+                    this.comFun.alert(this.comFun.i18n('확인'), "이미 존재합니다.");
+                }
+                
+                //조회
+                this.apiSelectListHeader();
+
+                //초기화 이벤트
+                this.onTapCancel()
+            },
+            error: (response: any) => {
+                this.comAlert.showAlert('error','',`오류 발생`, false);
+            }
+        })
+
+    }
+
+    //회계기 정보 복구
+    compdRestore(cdModel){
+
+        this.service.compdRestore(cdModel).subscribe({
+            next: (response: any) => {
+                if(response.stateCd === 'RESTORE'){
+                    this.comFun.alert(this.comFun.i18n('확인'), "복구 성공");
+                }else if(response.stateCd === 'OK'){
+                    this.comFun.alert(this.comFun.i18n('확인'), "존재합니다.");
+                }
+
+                //조회
+                this.apiSelectListHeader();
+
+                //초기화 이벤트
+                this.onTapCancel()
+            },
+            error: (response: any) => {
+                this.comAlert.showAlert('error','',`오류 발생`, false);
+            }
+        })
+    }
+
+    //사업번호 검색
+    searchBtn(rawValue: string){
+        
+        //검색할 업체번호 저장
+        this.searchModel.useCompNm = rawValue;
+
+        //조회
+        this.apiSelectListHeader();
     }
 }
