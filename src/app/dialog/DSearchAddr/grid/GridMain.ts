@@ -29,13 +29,15 @@ export class GridMain {
             sortable: true,
             valueGetter: this.comFun.gridRowNo,
             width: 65,
+            cellStyle: {textAlign: "center"}
         },    
         {
-            field: 'zipCd',
+            field: 'zipNo',
             headerName: '우편번호', 
             sortable: true,
             filter: false,
-            flex: 1,
+            width: 100,
+            cellStyle: {textAlign: "center"}
         },
         {
             field: 'addrRoad',
@@ -45,18 +47,18 @@ export class GridMain {
             flex: 1,
         },
         {
-            field: 'addr',
-            headerName: '주소',
+            field: 'addrOld',
+            headerName: '지번',
             sortable: true,
             filter: false,
             flex: 1,
         },
         {
-            field: 'addrNo',
-            headerName: '지번',
+            field: 'addrRoadEng',
+            headerName: '영문 주소',
             sortable: true,
             filter: false,
-            flex: 1,
+            width: 150,
         },
     ];
 }

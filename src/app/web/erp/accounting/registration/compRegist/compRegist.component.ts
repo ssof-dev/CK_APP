@@ -1,5 +1,5 @@
 declare var Ext: any;
-import { Component, OnInit, Input, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, AfterViewInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { IndexComponent } from 'src/app/index/index.component';
 import { CompRegistModel, CompdModel, CompRegistService } from './service/compRegist.server';
@@ -55,7 +55,12 @@ export class CompRegistComponent implements OnInit, AfterViewInit{
 
     textRequired : boolean = false;
 
+    //저장 타입
     saveType : any;
+
+    //min, max Date
+    // minEndDate : Date;
+    // maxEndDate : Date;
 
 
     //업체구분 콤보박스
@@ -87,7 +92,8 @@ export class CompRegistComponent implements OnInit, AfterViewInit{
         public comVal: ComValidation,
         private commService: CommonService,
         private service: CompRegistService,
-        public indexCmp: IndexComponent) {}
+        public indexCmp: IndexComponent,
+        private cdr: ChangeDetectorRef) {}
 
     ngOnInit(){
         let param = {
@@ -325,12 +331,21 @@ export class CompRegistComponent implements OnInit, AfterViewInit{
         }
 
     }
+
+    formatDateString(inputString: string): string{
+        const year = inputString.substr(0, 4);
+        const month = inputString.substr(4, 2);
+        const day = inputString.substr(6, 2);
+      
+        return `${year}-${month}-${day}`;
+    }
     
     //저장 버튼 이벤트
     onTapSave(){
         //필수항목 활성화
         this.textRequired = true;
 
+        //저장 별 rowType 상태에 따른 필수 항목
         if(this.saveType === 'insert'){
             if(this.comFun.isEmpty(this.compmModel.useCompNo)
                 || this.comFun.isEmpty(this.compmModel.useCompNm)
@@ -344,9 +359,28 @@ export class CompRegistComponent implements OnInit, AfterViewInit{
             //수정 옵션에 따라서 나눠짐
         }
 
+        //날짜 비교
+        const frYmdDate =  new  Date(this.formatDateString(this.compdModel.frYmd));
+        const toYmdDate =  new  Date(this.formatDateString(this.compdModel.toYmd));
+
+        if(frYmdDate > toYmdDate){//회계기 시작일이 종료일보다 이후일때
+            this.comFun.alert(this.comFun.i18n('확인'), "회계기 시작일이 종료일보다 이후입니다."+'<br>'+" 날짜를 다시 선택해주세요");
+            return;
+        }else if(frYmdDate == toYmdDate){//회계기 시작일이 종료일과 같을 때
+            this.comFun.alert(this.comFun.i18n('확인'), "회계기 시작일과 종료일의 날짜가 같습니다."+'<br>'+" 날짜를 다시 선택해주세요");
+            return;
+        }else{//회계기 시작일과 종료일이 정상적이지만 서로 1년 이상의 차이가 날 때
+            const oneYearLater = new  Date(frYmdDate.getTime() + (365 * 24 * 60 * 60 * 1000))
+
+            if(oneYearLater < toYmdDate){
+                this.comFun.alert(this.comFun.i18n('확인'), "회계기 기간 치괴 1년을 초과했습니다."+'<br>'+" 날짜를 다시 선택해주세요");
+                return;
+            }
+        }
+
         let param = {
             header : [this.compmModel]
-            ,   detail: [this.compdModel]
+        ,   detail: [this.compdModel]
         }
         
         this.service.saveCompInfo(param).subscribe({
@@ -522,8 +556,10 @@ export class CompRegistComponent implements OnInit, AfterViewInit{
             //결과처리 (무조건 List 형식으로 들어옴)
             if (result.length > 0) {
                 // paramb :this.codeModel.aa;
+                this.compdModel.compAddr = result[0].addrRoad;
+                this.compdModel.zipNo  = result[0].zipNo
             } else {
-                // this.codeModel.bb = result[0].bb;
+                // this.compdModel.zipNo  = result[0].zipNo
                 // 화면 버튼 모드 설정
             }
         });
@@ -589,4 +625,22 @@ export class CompRegistComponent implements OnInit, AfterViewInit{
         //조회
         this.apiSelectListHeader();
     }
+
+    // updateEndDatePicker(){
+    //     //시작일로부터 365일 이내로 종료일 설정
+    //     const startDate = Ext.Date.parse(this.compdModel.frYmd, 'Ymd');
+    //     console.log("날짜 범위 지정", startDate)
+
+    //     if(startDate){
+    //         const endDate = new Date(startDate.getTime() + (365 * 24 * 60 * 60 * 1000));
+    //         // this.minEndDate = Ext.Date.format(startDate, 'Ymd');
+    //         // this.maxEndDate = Ext.Date.format(endDate, 'Ymd');
+
+    //         this.endDateField.setMinDate(this.minEndDate);
+    //         this.endDateField.setMaxDate(this.maxEndDate);
+            
+    //         // console.log("minEndDate", this.minEndDate)
+    //         // console.log("maxEndDate", this.maxEndDate)
+    //     }
+    // }
 }

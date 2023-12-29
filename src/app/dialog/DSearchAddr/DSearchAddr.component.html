@@ -1,5 +1,5 @@
 <ExtDialog [displayed]="isDlSearchAddrDialog" title="{{ '주소검색' | translate }}" iconCls="x-fa fa-seedling"
-    [maximizable]="true" [closable]="true" [closeAction]="'hide'" [bodyPadding]="10" (hide)="this.onHide()" width="70%"
+    [maximizable]="true" [closable]="true" [closeAction]="'hide'" [bodyPadding]="10" (hide)="this.onHide()" width="50%"
     height="70%" [keyMapEnabled]="false" (ready)="this.comFun.keyMap($event,this)">
     <ExtContainer padding="0" layout="fit" fitToParent="true">
         <ExtContainer padding="0" layout="fit" fitToParent="true">
@@ -26,10 +26,10 @@
                                     <!-- (keyup)="this.dlSearchAddrTrigger($event)"  -->
                                     <ExtTextfield label="{{ '주소' | translate }}" [placeholder]=""
                                         [disabled]="this.isApiResponse" [height]="30"
-                                        (keyup)="this.searchModel.search = $event.sender.rawValue"
-                                        (blur)="this.searchModel.search = $event.sender.rawValue"
-                                        [value]="comFun.valEmpty(this.searchModel.search)"
-                                        (clearicontap)="this.searchModel.search = ''">
+                                        (keyup)="this.searchModel.keyword = $event.sender.rawValue"
+                                        (blur)="this.searchModel.keyword = $event.sender.rawValue"
+                                        [value]="comFun.valEmpty(this.searchModel.keyword)"
+                                        (clearicontap)="this.searchModel.keyword = ''">
                                     </ExtTextfield>
                                 </ExtFieldset>
                             </ExtContainer>
@@ -51,7 +51,7 @@
                             </ExtContainer>
 
                             <ExtContainer [layout]="{ type: 'box', vertical: true }" width="10%">
-                                <ExtLabel html='{{this.rowStackNum}}/{{this.searchModel.pageSize}}'
+                                <ExtLabel html='{{this.rowStackNum}}/{{this.searchModel.pageUnit}}'
                                     style="font-size: 12px; font-weight: bold; margin-top: 12px; color: #53738C; text-align: center; vertical-align:middle;">
                                 </ExtLabel>
                             </ExtContainer>

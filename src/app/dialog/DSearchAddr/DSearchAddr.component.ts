@@ -88,10 +88,10 @@
 		this.isDlSearchAddrDialog = true;
 
 		// @osh_20210915 필드 값 초기화
-		this.searchModel.pageIndex = 1;
-		this.searchModel.pageUnit = 10;
-		this.searchModel.pageSize = 0;
-		this.searchModel.search = '';
+		this.searchModel.offset = 1;
+		this.searchModel.pageSize = 10;
+		this.searchModel.pageUnit = 0;
+		this.searchModel.keyword = '';
 		this.rowStackNum = 0;
 		this.lastIndex = 0;
 		this.isApiResponse = false;
@@ -119,7 +119,7 @@
 	}
 
 	dlSearchAddrTrigger(event) {
-		this.searchModel.search = event.sender.rawValue;
+		this.searchModel.keyword = event.sender.rawValue;
 		if (event.e.keyCode === 13) {
 			this.onTapQuery();
 		}
@@ -127,15 +127,15 @@
 
 	// 조회 이벤트
 	onTapQuery = () => {
-		this.searchModel.pageIndex = 1;
+		this.searchModel.offset = 1;
 		this.callApiAddr(this.searchModel, "주소 정보가 없습니다.", 0);
 	}
 
 	//주소 그리드 이전 페이지
 	preOnTapQuery() {
-		this.searchModel.pageIndex--;
-		if (this.searchModel.pageIndex < 1) {
-			this.searchModel.pageIndex++;
+		this.searchModel.offset--;
+		if (this.searchModel.offset < 1) {
+			this.searchModel.offset++;
 			return;
 		}
 		this.callApiAddr(this.searchModel, "주소 정보가 없습니다.", -1);
@@ -143,9 +143,9 @@
 
 	//주소 그리드 다음 페이지
 	nextOnTapQuery() {
-		this.searchModel.pageIndex++;
-		if (this.searchModel.pageSize <= this.rowStackNum) {
-			this.searchModel.pageIndex--;
+		this.searchModel.offset++;
+		if (this.searchModel.pageUnit <= this.rowStackNum) {
+			this.searchModel.offset--;
 			return;
 		}
 		this.callApiAddr(this.searchModel, "주소 정보가 없습니다.", 1);
@@ -214,14 +214,14 @@
 	public callApiAddr(searchModel: Object, alertMsg: string, curPageControlNum: number): void {
 
 		//주소검색 필드가 ''(빈칸), undefined 일때 함수 빠져나옴
-		if (!this.searchModel ?.search) {
+		if (!this.searchModel ?.keyword) {
 			this.curPageController(curPageControlNum);
 			return;
 		}
 		this.isApiResponse = true;
 		this.gridMain.gridApi.showLoadingOverlay();
 
-		this.apiHttpServiceImpl.selectList('/api/comm/egcZipcodeWebSearch', searchModel).subscribe(
+		this.apiHttpServiceImpl.selectList('/api/comm/egcZipcodeWebSearch', this.searchModel).subscribe(
 			(res: any) => {
 
 				if (res.success === false) {
@@ -247,19 +247,19 @@
 					// 통신 성공
 					// ***************************************
 					// Json String -> 객체
-					var jsonRes = JSON.parse(res.resModel);
-
+					var jsonRes = res.data;
+					
 					this.gridMain.rowData = jsonRes;
 					switch (curPageControlNum) {
 						case 0:
 							//관련지번까지 불러온 이후로는 건수가 안맞아 페이지 넘버로 수정
 							// this.rowStackNum = jsonRes.length;
-							this.rowStackNum = this.searchModel.pageIndex;
+							this.rowStackNum = this.searchModel.offset;
 							// this.searchModel.pageSize = res[0]?.pageSize ?? 0;
-							this.searchModel.pageSize = Math.ceil(jsonRes[0] ?.pageSize / 10) ?? 0;
+							this.searchModel.pageUnit = Math.ceil(res ?.count / 10) ?? 0;
 							break;
 						case -1:
-							if (this.lastIndex > 0 && this.lastIndex < this.searchModel.pageUnit) {
+							if (this.lastIndex > 0 && this.lastIndex < this.searchModel.pageSize) {
 								this.rowStackNum = (+this.rowStackNum) - this.lastIndex;
 								this.lastIndex = 0;
 							} else {
@@ -290,10 +290,10 @@
 	public curPageController(curPageControlNum: Number): void {
 		switch (curPageControlNum) {
 			case -1:
-				this.searchModel.pageIndex++;
+				this.searchModel.offset++;
 				break;
 			case 1:
-				this.searchModel.pageIndex--;
+				this.searchModel.offset--;
 				break;
 			default:
 				return;

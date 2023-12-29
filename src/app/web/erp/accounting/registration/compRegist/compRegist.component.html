@@ -332,7 +332,8 @@
                                     [requiredMessage]="'회계기를 입력하지 않았습니다.'"
                                 ></ExtTextfield>
 
-                                <ExtDatefield label="시작일" [disabled]="this.compdFormDisable" 
+                                <ExtDatefield
+                                    label="회계연도시작일" [disabled]="this.compdFormDisable" 
                                     [value]="(compdModel.frYmd || '')" 
                                     destroyPickerOnHide="true"
                                     [dateFormat]="'Ymd'"
@@ -342,7 +343,8 @@
                                     style="margin-left: 20px;"
                                 ></ExtDatefield>
 
-                                <ExtDatefield label="종료일" [disabled]="this.compdFormDisable" 
+                                <ExtDatefield #endDateField
+                                    label="회계연도종료일" [disabled]="this.compdFormDisable" 
                                     [value]="(compdModel.toYmd || '')" 
                                     destroyPickerOnHide="true"
                                     [dateFormat]="'Ymd'"
@@ -351,9 +353,7 @@
                                     [flex]="1"
                                     style="margin-left: 20px;"
                                 ></ExtDatefield>
-
                             </ExtFieldset>
-        
         
                             <ExtFieldset layout="hbox">
                                 <ExtTextfield label="대표자명" [disabled]="this.compdFormDisable" 
